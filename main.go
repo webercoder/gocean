@@ -20,7 +20,7 @@ func usage(msg string) {
 
 func handleTidesCommand(station string) {
 	tidesClient := tides.NewNOAATidesClient()
-	predictions, err := tidesClient.RetrievePredictions(station, 48)
+	predictions, err := tidesClient.RetrievePredictions(station, 24)
 	if err != nil {
 		usage("Could not load predictions for station")
 	}

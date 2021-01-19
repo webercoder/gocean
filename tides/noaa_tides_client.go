@@ -44,7 +44,7 @@ func (ntc *NOAATidesClient) RetrievePredictions(station string, hours int) ([]Ti
 	params.Add("application", "gocean")
 	params.Add("begin_date", currentTime.Format("20060102 15:04"))
 	params.Add("end_date", currentTime.Add(time.Hour*time.Duration(hours)).Format("20060102 15:04"))
-	params.Add("datum", "STND")
+	params.Add("datum", "MLLW")
 	params.Add("format", "json")
 	params.Add("product", "predictions")
 	params.Add("station", station)
