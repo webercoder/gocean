@@ -76,8 +76,8 @@ func (fsc *FakeStationsClient) Get(url string) (resp *http.Response, err error) 
 	}, nil
 }
 
-func TestNOAAStationManager_GetStations(t *testing.T) {
-	retriever := &stations.NOAAStationManager{Client: &FakeStationsClient{XML: SampleStationsData}}
+func TestNOAAStationClient_GetStations(t *testing.T) {
+	retriever := &stations.NOAAStationClient{Client: &FakeStationsClient{XML: SampleStationsData}}
 	result := retriever.GetStations(true)
 
 	if len(result) != 3 {
@@ -129,8 +129,8 @@ func TestNOAAStationManager_GetStations(t *testing.T) {
 	}
 }
 
-func TestNOAAStationManager_GetNearestStation(t *testing.T) {
-	retriever := &stations.NOAAStationManager{Client: &FakeStationsClient{XML: SampleStationsData}}
+func TestNOAAStationClient_GetNearestStation(t *testing.T) {
+	retriever := &stations.NOAAStationClient{Client: &FakeStationsClient{XML: SampleStationsData}}
 	sanDiegoCityHall := utils.GeoCoordinates{Lat: 32.716868, Long: -117.162837}
 	expectedStationID := 9410170
 	station, _ := retriever.GetNearestStation(sanDiegoCityHall)

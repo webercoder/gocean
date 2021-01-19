@@ -14,7 +14,7 @@ func TestCensusZipCoords(t *testing.T) {
 	}
 
 	for zip, expected := range tests {
-		actual, err := utils.FindCoordsForZip(zip)
+		actual, err := utils.FindCoordsForPostcode(zip)
 		if err != nil {
 			t.Errorf("Error retrieving coords for zip code %s: %s", zip, err)
 		}

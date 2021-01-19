@@ -13,21 +13,16 @@ import (
 // DefaultStationsEndpoint is the default stations endpoint from NOAA.
 const DefaultStationsEndpoint = "https://opendap.co-ops.nos.noaa.gov/stations/stationsXML.jsp"
 
-// HTTPGetter for mocking the HTTP client in tests.
-type HTTPGetter interface {
-	Get(url string) (resp *http.Response, err error)
-}
-
-// NOAAStationManager implements StationRetriever for interacting with NOAA.
-type NOAAStationManager struct {
+// NOAAStationClient interacts with NOAA.
+type NOAAStationClient struct {
 	URL           string
-	Client        HTTPGetter
+	Client        utils.HTTPGetter
 	StationsCache []Station
 }
 
-// NewNOAAStationManager creates a new NOAAStationManager with the default URL.
-func NewNOAAStationManager() *NOAAStationManager {
-	return &NOAAStationManager{URL: DefaultStationsEndpoint, Client: &http.Client{}}
+// NewNOAAStationClient creates a new NOAAStationClient with the default URL.
+func NewNOAAStationClient() *NOAAStationClient {
+	return &NOAAStationClient{URL: DefaultStationsEndpoint, Client: &http.Client{}}
 }
 
 func decodeStationsXMLStream(httpResponseBody io.ReadCloser) (GetStationResponse, error) {
@@ -39,7 +34,7 @@ func decodeStationsXMLStream(httpResponseBody io.ReadCloser) (GetStationResponse
 }
 
 // GetStations .
-func (s *NOAAStationManager) GetStations(skipCache bool) []Station {
+func (s *NOAAStationClient) GetStations(skipCache bool) []Station {
 	var stationResponse GetStationResponse
 
 	if !skipCache && len(s.StationsCache) > 0 {
@@ -48,7 +43,11 @@ func (s *NOAAStationManager) GetStations(skipCache bool) []Station {
 
 	resp, err := s.Client.Get(s.URL)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error retrieving station data", err)
+		return stationResponse.Stations
+	}
+	if resp.Body == nil {
+		fmt.Println("Error retrieving HTTP request body for station data", err)
 		return stationResponse.Stations
 	}
 	defer resp.Body.Close()
@@ -63,7 +62,7 @@ func (s *NOAAStationManager) GetStations(skipCache bool) []Station {
 }
 
 // GetNearestStation gets the nearest station to a given set of coordinates.
-func (s *NOAAStationManager) GetNearestStation(coords utils.GeoCoordinates) (Station, float64) {
+func (s *NOAAStationClient) GetNearestStation(coords utils.GeoCoordinates) (Station, float64) {
 	var nearestStation Station
 	var nearestDistance float64 = -1.0
 

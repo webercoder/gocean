@@ -1,7 +1,17 @@
 package tides
 
-// TideInfo Contains tide information for a single location
-// Datatypes match up with examples on https://api.tidesandcurrents.noaa.gov/api/prod/
+// TidePredictions contain tide predictions from a station
+type TidePredictions struct {
+	Predictions []TidePrediction `json:"predictions"`
+}
+
+// TidePrediction contains a single tide prediction for a specific time.
+type TidePrediction struct {
+	Time  string `json:"t"`
+	Value string `json:"v"`
+}
+
+// TideInfo Contains tide information from a station
 type TideInfo struct {
 	metadata TideInfoMetadata
 	data     []TideInfoData

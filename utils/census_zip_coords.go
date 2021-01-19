@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-// FindCoordsForZip returns the geocoordinates for a zip code.
-func FindCoordsForZip(zip string) (*GeoCoordinates, error) {
+// FindCoordsForPostcode returns the geocoordinates for a zip code.
+func FindCoordsForPostcode(zip string) (*GeoCoordinates, error) {
 	// Uncomment to read the zip codes from a file and stream search them:
 	// appPath, err := os.Executable()
 	// if err != nil {
