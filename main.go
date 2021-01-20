@@ -15,7 +15,7 @@ func usage(msg string) {
 	if len(msg) > 0 {
 		fmt.Printf("%s\n", msg)
 	}
-	fmt.Printf("Usage:\n\t%s station postcode\n\t%s tides station-id\n", os.Args[0], os.Args[0])
+	fmt.Printf("Usage:\n\t%s stations postcode\n\t%s tides station-id\n", os.Args[0], os.Args[0])
 	os.Exit(1)
 }
 
