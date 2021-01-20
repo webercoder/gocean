@@ -36,8 +36,14 @@ func handleStationCommand(location string) {
 	}
 
 	stationsClient := stations.NewClient()
-	station, distance := stationsClient.GetNearestStation(*coords)
-	fmt.Printf("The nearest Station is \"%s\" (ID: %d), which is %f kms away from %s.\n", station.Name, station.ID, distance, location)
+	result := *stationsClient.GetNearestStation(*coords)
+	fmt.Printf(
+		"The nearest Station is \"%s\" (ID: %d), which is %f kms away from %s.\n",
+		result.Station.Name,
+		result.Station.ID,
+		result.Distance,
+		location,
+	)
 }
 
 func config(command string) {

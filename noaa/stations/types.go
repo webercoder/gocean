@@ -1,8 +1,17 @@
 package stations
 
-import "encoding/xml"
+import (
+	"encoding/xml"
 
-// TODO: Make this generic for any country's stations
+	"github.com/webercoder/gocean/utils"
+)
+
+// StationDistance describes the distance from a set of coordinates to a station.
+type StationDistance struct {
+	Distance float64
+	From     utils.GeoCoordinates
+	Station  Station
+}
 
 // GetStationResponse represents a response to retrieving the station data
 type GetStationResponse struct {

@@ -4,7 +4,9 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+	"math"
 	"net/http"
+	"sync"
 
 	"github.com/webercoder/gocean/utils"
 	"golang.org/x/net/html/charset"
@@ -12,6 +14,9 @@ import (
 
 // DefaultStationsEndpoint is the default stations endpoint from NOAA.
 const DefaultStationsEndpoint = "https://opendap.co-ops.nos.noaa.gov/stations/stationsXML.jsp"
+
+// MaxStationsSearchChunkSize is used when searching for nearest station with goroutines
+const MaxStationsSearchChunkSize = 10
 
 // Client interacts with NOAA.
 type Client struct {
@@ -62,20 +67,60 @@ func (s *Client) GetStations(skipCache bool) []Station {
 }
 
 // GetNearestStation gets the nearest station to a given set of coordinates.
-func (s *Client) GetNearestStation(coords utils.GeoCoordinates) (Station, float64) {
-	var nearestStation Station
-	var nearestDistance float64 = -1.0
+func (s *Client) GetNearestStation(coords utils.GeoCoordinates) *StationDistance {
+	result := &StationDistance{Distance: -1.0, From: coords}
+	stations := s.GetStations(false)
+	var wg sync.WaitGroup
 
-	for _, station := range s.GetStations(false) {
+	if len(stations) == 0 {
+		return result
+	}
+
+	// Either MaxStationsSearchChunkSize or half the size of the stations list rounded up
+	chunkSize := math.Min(MaxStationsSearchChunkSize, math.Ceil(float64(len(stations))/2))
+
+	// Length is the number of goroutines that will be spawned
+	routineCount := int(math.Ceil(float64(len(stations)) / chunkSize))
+	c := make(chan *StationDistance, routineCount)
+
+	for i := 0; i < routineCount; i++ {
+		start := int(float64(i) * chunkSize)
+		end := int(math.Min(float64(len(stations)), float64(i+1)*chunkSize))
+		wg.Add(1)
+		go s.findNearestStation(&wg, c, coords, stations[start:end])
+	}
+
+	wg.Wait()
+	close(c)
+	for item := range c {
+		if result.Distance == -1 || result.Distance > item.Distance {
+			result = item
+		}
+	}
+
+	return result
+}
+
+func (s *Client) findNearestStation(
+	wg *sync.WaitGroup,
+	c chan *StationDistance,
+	coords utils.GeoCoordinates,
+	stations []Station,
+) {
+	defer wg.Done()
+	result := &StationDistance{Distance: -1.0, From: coords}
+
+	for _, station := range stations {
 		distance := utils.HarvesineDistance(coords, utils.GeoCoordinates{
 			Lat:  station.Metadata.Location.Lat,
 			Long: station.Metadata.Location.Long,
 		})
-		if nearestDistance < 0 || distance < nearestDistance {
-			nearestStation = station
-			nearestDistance = distance
+
+		if result.Distance < 0 || result.Distance > distance {
+			result.Station = station
+			result.Distance = distance
 		}
 	}
 
-	return nearestStation, nearestDistance
+	c <- result
 }

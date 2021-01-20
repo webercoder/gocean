@@ -133,15 +133,21 @@ func TestNOAAStationClient_GetNearestStation(t *testing.T) {
 	retriever := &stations.Client{HTTPClient: &FakeStationsClient{XML: SampleStationsData}}
 	sanDiegoCityHall := utils.GeoCoordinates{Lat: 32.716868, Long: -117.162837}
 	expectedStationID := 9410170
-	station, _ := retriever.GetNearestStation(sanDiegoCityHall)
-	if station.ID != expectedStationID {
-		t.Errorf("Expected %d to equal %d", station.ID, expectedStationID)
+	result := retriever.GetNearestStation(sanDiegoCityHall)
+	if result.Station.ID != expectedStationID {
+		t.Errorf("Expected %d to equal %d", result.Station.ID, expectedStationID)
+	}
+	if result.From != sanDiegoCityHall {
+		t.Error("From should be the coords that were passed in", result.From, sanDiegoCityHall)
 	}
 
 	pearlHarbor := utils.GeoCoordinates{Lat: 21.339884, Long: -157.970901}
 	expectedStationID = 1612340
-	station, _ = retriever.GetNearestStation(pearlHarbor)
-	if station.ID != expectedStationID {
-		t.Errorf("Expected %d to equal %d", station.ID, expectedStationID)
+	result = retriever.GetNearestStation(pearlHarbor)
+	if result.Station.ID != expectedStationID {
+		t.Errorf("Expected %d to equal %d", result.Station.ID, expectedStationID)
+	}
+	if result.From != pearlHarbor {
+		t.Error("From should be the coords that were passed in", result.From, pearlHarbor)
 	}
 }
