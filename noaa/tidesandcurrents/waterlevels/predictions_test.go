@@ -1,11 +1,12 @@
-package tides_test
+package waterlevels_test
 
 import (
 	"net/http"
 	"testing"
 
+	. "github.com/webercoder/gocean/noaa/tidesandcurrents"
+	"github.com/webercoder/gocean/noaa/tidesandcurrents/waterlevels"
 	"github.com/webercoder/gocean/testutils"
-	. "github.com/webercoder/gocean/tides"
 )
 
 const NOAAPredictionsJSONData = `{
@@ -27,12 +28,12 @@ const NOAAPredictionsJSONData = `{
     }]
 }`
 
-type FakePredictionsClient struct {
+type FakeTidesAndCurrentsClient struct {
 	Err      error
 	JsonData string
 }
 
-func (fsc *FakePredictionsClient) Get(url string) (resp *http.Response, err error) {
+func (fsc *FakeTidesAndCurrentsClient) Get(url string) (resp *http.Response, err error) {
 	if fsc.Err != nil {
 		return nil, fsc.Err
 	}
@@ -42,10 +43,10 @@ func (fsc *FakePredictionsClient) Get(url string) (resp *http.Response, err erro
 	}, nil
 }
 
-func TestNOAATidesClient_RetrievePredictions(t *testing.T) {
+func TestRetrievePredictions(t *testing.T) {
 	station := "9410170"
-	client := &NOAATidesClient{Client: &FakePredictionsClient{JsonData: NOAAPredictionsJSONData}}
-	data, err := client.RetrievePredictions(station, 1)
+	client := &Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAPredictionsJSONData}}
+	data, err := waterlevels.RetrievePredictions(client, station, 1)
 	if err != nil {
 		t.Error("Did not expect error when retrieving tide data", err)
 	}

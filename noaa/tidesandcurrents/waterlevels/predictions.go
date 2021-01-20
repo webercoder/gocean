@@ -1,37 +1,37 @@
-package tides
+package waterlevels
 
 import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"net/url"
 	"time"
 
-	"github.com/webercoder/gocean/utils"
+	"github.com/webercoder/gocean/noaa/tidesandcurrents"
 )
 
-// DefaultTidesEndpoint is the default tides endpoint from NOAA.
-const DefaultTidesEndpoint = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
-
-// https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=9410170&
-// product=predictions&units=metric&time_zone=lst_ldt&application=gocean&format=json&
-// datum=STND&begin_date=20210119&end_date=20210121
-
-// NOAATidesClient interacts with the NOAA api.
-type NOAATidesClient struct {
-	Application string
-	Client      utils.HTTPGetter
-	URL         string
+// Predictions contain tide predictions from a station
+type predictions struct {
+	Predictions []Prediction `json:"predictions"`
 }
 
-// NewNOAATidesClient creates a new NOAATidesClient object with default values.
-func NewNOAATidesClient() *NOAATidesClient {
-	return &NOAATidesClient{URL: DefaultTidesEndpoint, Client: &http.Client{}}
+// Prediction contains a single tide prediction for a specific time.
+type Prediction struct {
+	Time  string `json:"t"`
+	Value string `json:"v"`
 }
 
 // RetrievePredictions gets the predictions from station.
-func (ntc *NOAATidesClient) RetrievePredictions(station string, hours int) ([]TidePrediction, error) {
+//
+// Example query:
+// https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=9410170&
+// product=predictions&units=metric&time_zone=lst_ldt&application=gocean&format=json&
+// datum=STND&begin_date=20210119&end_date=20210121
+func RetrievePredictions(
+	ntc *tidesandcurrents.Client,
+	station string,
+	hours int,
+) ([]Prediction, error) {
 	currentTime := time.Now()
 
 	baseURL, err := url.Parse(ntc.URL)
@@ -52,7 +52,7 @@ func (ntc *NOAATidesClient) RetrievePredictions(station string, hours int) ([]Ti
 	params.Add("units", "english")
 	baseURL.RawQuery = params.Encode()
 
-	resp, err := ntc.Client.Get(baseURL.String())
+	resp, err := ntc.HTTPClient.Get(baseURL.String())
 	if err != nil {
 		fmt.Println("Error retrieving predictions", err)
 		return nil, err
@@ -67,7 +67,7 @@ func (ntc *NOAATidesClient) RetrievePredictions(station string, hours int) ([]Ti
 		return nil, err
 	}
 
-	predictions := &TidePredictions{}
+	predictions := &predictions{}
 	err = json.Unmarshal(jsonData, &predictions)
 	if err != nil {
 		fmt.Println("Error parsing predictions json data", err)
@@ -78,7 +78,7 @@ func (ntc *NOAATidesClient) RetrievePredictions(station string, hours int) ([]Ti
 }
 
 // PrintPredictions outputs the tides in text format.
-func PrintPredictions(station string, predictions []TidePrediction) {
+func PrintPredictions(station string, predictions []Prediction) {
 	fmt.Println("Tide predictions for station:", station)
 	for _, prediction := range predictions {
 		fmt.Printf("  %s\t%s\n", prediction.Time, prediction.Value)

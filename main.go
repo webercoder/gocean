@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/webercoder/gocean/stations"
-	"github.com/webercoder/gocean/tides"
+	"github.com/webercoder/gocean/noaa/stations"
+	"github.com/webercoder/gocean/noaa/tidesandcurrents"
+	"github.com/webercoder/gocean/noaa/tidesandcurrents/waterlevels"
 	"github.com/webercoder/gocean/utils"
 )
 
@@ -19,12 +20,12 @@ func usage(msg string) {
 }
 
 func handleTidesCommand(station string) {
-	tidesClient := tides.NewNOAATidesClient()
-	predictions, err := tidesClient.RetrievePredictions(station, 24)
+	tidesClient := tidesandcurrents.NewClient()
+	predictions, err := waterlevels.RetrievePredictions(tidesClient, station, 24)
 	if err != nil {
 		usage("Could not load predictions for station")
 	}
-	tides.PrintPredictions(station, predictions)
+	waterlevels.PrintPredictions(station, predictions)
 }
 
 func handleStationCommand(location string) {
@@ -34,8 +35,8 @@ func handleStationCommand(location string) {
 		usage("Could not find coordinates for the provided location")
 	}
 
-	stationManager := stations.NewNOAAStationClient()
-	station, distance := stationManager.GetNearestStation(*coords)
+	stationsClient := stations.NewClient()
+	station, distance := stationsClient.GetNearestStation(*coords)
 	fmt.Printf("The nearest Station is \"%s\" (ID: %d), which is %f kms away from %s.\n", station.Name, station.ID, distance, location)
 }
 
@@ -50,7 +51,7 @@ func config(command string) {
 }
 
 func parseArgs() {
-	stationCmd := flag.NewFlagSet("station", flag.ExitOnError)
+	stationCmd := flag.NewFlagSet("stations", flag.ExitOnError)
 	tideCmd := flag.NewFlagSet("tides", flag.ExitOnError)
 	configCmd := flag.NewFlagSet("config", flag.ExitOnError)
 
@@ -59,9 +60,9 @@ func parseArgs() {
 	}
 
 	switch os.Args[1] {
-	case "station":
+	case "stations":
 		if err := stationCmd.Parse(os.Args[2:]); err != nil {
-			usage("Unable to parse station commands")
+			usage("Unable to parse stations commands")
 		}
 		handleStationCommand(stationCmd.Arg(0))
 	case "tides":

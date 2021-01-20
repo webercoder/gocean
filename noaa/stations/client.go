@@ -13,16 +13,16 @@ import (
 // DefaultStationsEndpoint is the default stations endpoint from NOAA.
 const DefaultStationsEndpoint = "https://opendap.co-ops.nos.noaa.gov/stations/stationsXML.jsp"
 
-// NOAAStationClient interacts with NOAA.
-type NOAAStationClient struct {
+// Client interacts with NOAA.
+type Client struct {
 	URL           string
-	Client        utils.HTTPGetter
+	HTTPClient    utils.HTTPGetter
 	StationsCache []Station
 }
 
-// NewNOAAStationClient creates a new NOAAStationClient with the default URL.
-func NewNOAAStationClient() *NOAAStationClient {
-	return &NOAAStationClient{URL: DefaultStationsEndpoint, Client: &http.Client{}}
+// NewClient creates a new NOAAStationClient with the default URL.
+func NewClient() *Client {
+	return &Client{URL: DefaultStationsEndpoint, HTTPClient: &http.Client{}}
 }
 
 func decodeStationsXMLStream(httpResponseBody io.ReadCloser) (GetStationResponse, error) {
@@ -34,14 +34,14 @@ func decodeStationsXMLStream(httpResponseBody io.ReadCloser) (GetStationResponse
 }
 
 // GetStations .
-func (s *NOAAStationClient) GetStations(skipCache bool) []Station {
+func (s *Client) GetStations(skipCache bool) []Station {
 	var stationResponse GetStationResponse
 
 	if !skipCache && len(s.StationsCache) > 0 {
 		return s.StationsCache
 	}
 
-	resp, err := s.Client.Get(s.URL)
+	resp, err := s.HTTPClient.Get(s.URL)
 	if err != nil {
 		fmt.Println("Error retrieving station data", err)
 		return stationResponse.Stations
@@ -62,7 +62,7 @@ func (s *NOAAStationClient) GetStations(skipCache bool) []Station {
 }
 
 // GetNearestStation gets the nearest station to a given set of coordinates.
-func (s *NOAAStationClient) GetNearestStation(coords utils.GeoCoordinates) (Station, float64) {
+func (s *Client) GetNearestStation(coords utils.GeoCoordinates) (Station, float64) {
 	var nearestStation Station
 	var nearestDistance float64 = -1.0
 
