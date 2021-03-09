@@ -33,13 +33,13 @@ The nearest Station is "San Diego, San Diego Bay" (ID: 9410170), which is 1.1307
 ### Get Tide Predictions
 
 ```bash
-gocean tides [station-id]
+gocean tidesandcurrents [station-id]
 ```
 
 For example:
 
 ```bash
-$ gocean tides 9410170
+$ gocean tidesandcurrents 9410170
   2021-01-19 09:54      2.732
   2021-01-19 10:00      2.765
   2021-01-19 10:06      2.798
