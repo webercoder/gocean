@@ -1,9 +1,9 @@
-package tidesandcurrents
+package utils
 
 import (
 	"net/http"
 
-	"github.com/webercoder/gocean/utils"
+	goceanUtils "github.com/webercoder/gocean/utils"
 )
 
 // DefaultTidesEndpoint is the default tides endpoint from NOAA.
@@ -12,7 +12,7 @@ const DefaultTidesEndpoint = "https://api.tidesandcurrents.noaa.gov/api/prod/dat
 // Client interacts with the NOAA api.
 type Client struct {
 	Application string
-	HTTPClient  utils.HTTPGetter
+	HTTPClient  goceanUtils.HTTPGetter
 	URL         string
 }
 

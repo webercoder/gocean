@@ -1,4 +1,4 @@
-package waterlevels
+package predictions
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/webercoder/gocean/noaa/tidesandcurrents"
+	"github.com/webercoder/gocean/noaa/tidesandcurrents/utils"
 )
 
 // Predictions contain tide predictions from a station
@@ -21,14 +21,14 @@ type Prediction struct {
 	Value string `json:"v"`
 }
 
-// RetrievePredictions gets the predictions from station.
+// Retrieve gets the predictions from station.
 //
 // Example query:
 // https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=9410170&
 // product=predictions&units=metric&time_zone=lst_ldt&application=gocean&format=json&
 // datum=STND&begin_date=20210119&end_date=20210121
-func RetrievePredictions(
-	ntc *tidesandcurrents.Client,
+func Retrieve(
+	ntc *utils.Client,
 	station string,
 	hours int,
 ) ([]Prediction, error) {
@@ -77,8 +77,8 @@ func RetrievePredictions(
 	return predictions.Predictions, nil
 }
 
-// PrintPredictions outputs the tides in text format.
-func PrintPredictions(station string, predictions []Prediction) {
+// PrintTabDelimited outputs the tides in text format.
+func PrintTabDelimited(station string, predictions []Prediction) {
 	fmt.Println("Tide predictions for station:", station)
 	for _, prediction := range predictions {
 		fmt.Printf("  %s\t%s\n", prediction.Time, prediction.Value)
