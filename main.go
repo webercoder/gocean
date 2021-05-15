@@ -1,54 +1,64 @@
 package main
 
 import (
-	"flag"
+	"errors"
 	"fmt"
 	"os"
 
+	"github.com/webercoder/gocean/lib"
 	"github.com/webercoder/gocean/noaa/stations"
 	"github.com/webercoder/gocean/noaa/tidesandcurrents"
 )
 
-func usage(msg string) {
+func usage(handlers map[string]lib.CommandHandler, msg ...string) {
 	if len(msg) > 0 {
-		fmt.Printf("%s\n", msg)
+		for i := 0; i < len(msg); i++ {
+			fmt.Println(msg)
+		}
 	}
-	fmt.Printf("Usage:\n\t%s stations postcode\n\t%s tidesandcurrents station-id\n", os.Args[0], os.Args[0])
+
+	fmt.Println("Usage:")
+	for _, handler := range handlers {
+		handler.Usage()
+	}
+
 	os.Exit(1)
 }
 
-type commandHandlerContainer struct {
-	flagSet *flag.FlagSet
-	handler GoceanCommandHandler
-}
-
 func main() {
-	handlers := map[string]commandHandlerContainer{
-		"stations": {
-			flagSet: flag.NewFlagSet("stations", flag.ExitOnError),
-			handler: &stations.CommandHandler{},
-		},
-		"tidesandcurrents": {
-			flagSet: flag.NewFlagSet("tidesandcurrents", flag.ExitOnError),
-			handler: &tidesandcurrents.CommandHandler{},
-		},
+	handlers := map[string]lib.CommandHandler{
+		"stations":         stations.NewStationsCommandHandler(),
+		"tidesandcurrents": tidesandcurrents.NewTidesAndCurrentsCommandHandler(),
 	}
 
 	if len(os.Args) < 2 {
-		usage("")
+		usage(handlers)
 	}
 
-	handlerContainer, ok := handlers[os.Args[1]]
+	command := os.Args[1]
+	handler, ok := handlers[command]
 	if !ok {
-		usage(fmt.Sprintf("%s is not a valid command", os.Args[1]))
+		usage(handlers, fmt.Sprintf("Command %s is not a valid top-level command", command))
 	}
 
-	if err := handlerContainer.flagSet.Parse(os.Args[2:]); err != nil {
-		usage("Unable to parse command line options")
+	var subcommand string
+	if len(os.Args) > 2 {
+		subcommand = os.Args[2]
 	}
 
-	err := handlerContainer.handler.HandleCommand(handlerContainer.flagSet.Arg(0))
+	fset, err := handler.GetFlagSet(subcommand)
 	if err != nil {
-		usage(fmt.Sprint(err))
+		handler.Usage(err)
+		os.Exit(1)
+	}
+
+	if err := fset.Parse(os.Args[1:]); err != nil {
+		handler.Usage(errors.New("Unable to parse command line options"))
+		os.Exit(1)
+	}
+
+	err = handler.HandleCommand(subcommand)
+	if err != nil {
+		fmt.Println(err)
 	}
 }

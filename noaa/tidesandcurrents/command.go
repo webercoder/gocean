@@ -1,27 +1,57 @@
 package tidesandcurrents
 
 import (
+	"errors"
+	"flag"
 	"fmt"
 
+	"github.com/webercoder/gocean/lib"
 	"github.com/webercoder/gocean/noaa/tidesandcurrents/predictions"
-	"github.com/webercoder/gocean/noaa/tidesandcurrents/utils"
 )
 
 // CommandHandler .
-type CommandHandler struct{}
+type TidesAndCurrentsCommandHandler struct {
+	subHandlers map[string]lib.CommandHandler
+}
 
-// GetSupportedCommands .
-func (pch *CommandHandler) GetSupportedCommands() []string {
-	return []string{"predictions"}
+// NewCommandHandler creates a new Tides and Currents CommandHandler
+func NewTidesAndCurrentsCommandHandler() *TidesAndCurrentsCommandHandler {
+	return &TidesAndCurrentsCommandHandler{
+		subHandlers: map[string]lib.CommandHandler{
+			"predictions": predictions.NewCommandHandler(),
+		},
+	}
+}
+
+func (tch *TidesAndCurrentsCommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
+	if command == "" {
+		return nil, errors.New("please provide a subcommand")
+	}
+
+	handler, ok := tch.subHandlers[command]
+	if !ok {
+		return nil, fmt.Errorf("command %s is not supported", command)
+	}
+
+	return handler.GetFlagSet("")
 }
 
 // HandleCommand .
-func (pch *CommandHandler) HandleCommand(arg string) error {
-	tidesClient := utils.NewClient()
-	results, err := predictions.Retrieve(tidesClient, arg, 24)
-	if err != nil {
-		return fmt.Errorf("Could not load predictions for station")
+func (tch *TidesAndCurrentsCommandHandler) HandleCommand(command string) error {
+	if command == "" {
+		return errors.New("please provide a subcommand")
 	}
-	predictions.PrintTabDelimited(arg, results)
-	return nil
+
+	handler, ok := tch.subHandlers[command]
+	if !ok {
+		return fmt.Errorf("subcommand %s is not supported", command)
+	}
+
+	return handler.HandleCommand("")
+}
+
+func (tch *TidesAndCurrentsCommandHandler) Usage(err ...error) {
+	for key := range tch.subHandlers {
+		fmt.Printf("tidesandcurrents %s ...\n", key)
+	}
 }
