@@ -12,7 +12,7 @@ go get github.com/webercoder/gocean/...
 go install github.com/webercoder/gocean
 ```
 
-## Usage
+## Command-Line Usage
 
 ### Get the Nearest Station
 
@@ -44,32 +44,25 @@ Tide predictions for station: 9410230
   2021-05-14 22:06\t5.111
   2021-05-14 22:12\t5.136
   2021-05-14 22:18\t5.157
-  2021-05-14 22:24\t5.174
-  2021-05-14 22:30\t5.187
-  2021-05-14 22:36\t5.196
-  2021-05-14 22:42\t5.201
-  2021-05-14 22:48\t5.201
 ...
 ```
 
 ## Development Plan
 
-Directories under /noaa represent actual NOAA APIs and will be
-consumable by external programs. Currently these include partial implementations for the
-NOAA CO-OPS Tides and Currents API and a pseudo-API wrapper for the listing of NOAA
-oceanic stations. Other APIs will be added in the future.
+The `coops` directory contains libraries for connecting to the [NOAA CO-OPS API](https://api.tidesandcurrents.noaa.gov/api/prod/).
 
-The top-level program allows users to query the APIs.
+The `stations` directory contains libraries for retrieving NOAA oceanic station
+data.
 
-Planned features for the top-level executable:
+The top-level program has a few convenience functions for querying the API but will
+be expanded in the future to support all NOAA operations.
 
-* Complete query capability for all APIs in the /noaa directory.
-* Save preferred station(s) to ~/.gocean/ or a similar location.
+Planned features:
+
+* Flesh out this list and move it to GitHub issues.
+* Complete query capability for all CO-OPS products (See [the NOAA CO-OPS API docs](https://api.tidesandcurrents.noaa.gov/api/prod/)).
+* Save preferred station(s) to ~/.gocean/ or a similar location for easier command-line usage.
 * Optimize performance of nearest station calculation.
 * Allow querying by any location or postcode directly when using the tides and currents API.
-
-Planned features for the APIs:
-
-* Implement the complete NOAA Tides and Currents API.
 * Allow the stations listing to be cached locally.
-* Add additional NOAA API wrappers.
+* Write documentation for the API.
