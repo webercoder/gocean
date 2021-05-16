@@ -6,7 +6,6 @@ import (
 
 	"github.com/webercoder/gocean/lib"
 	"github.com/webercoder/gocean/noaa/stations"
-	"github.com/webercoder/gocean/testutils"
 )
 
 type FakeStationsClient struct {
@@ -72,7 +71,7 @@ func (fsc *FakeStationsClient) Get(url string) (resp *http.Response, err error) 
 	}
 
 	return &http.Response{
-		Body: testutils.NewStringReadCloser(fsc.XML),
+		Body: lib.NewStringReadCloser(fsc.XML),
 	}, nil
 }
 

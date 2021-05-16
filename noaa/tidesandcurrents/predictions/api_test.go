@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/webercoder/gocean/lib"
 	"github.com/webercoder/gocean/noaa/tidesandcurrents/predictions"
 	"github.com/webercoder/gocean/noaa/tidesandcurrents/utils"
-	"github.com/webercoder/gocean/testutils"
 )
 
 const NOAAPredictionsJSONData = `{
@@ -39,7 +39,7 @@ func (fsc *FakeTidesAndCurrentsClient) Get(url string) (resp *http.Response, err
 	}
 
 	return &http.Response{
-		Body: testutils.NewStringReadCloser(fsc.JsonData),
+		Body: lib.NewStringReadCloser(fsc.JsonData),
 	}, nil
 }
 
