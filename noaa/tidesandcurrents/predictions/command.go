@@ -5,19 +5,19 @@ import (
 	"flag"
 	"fmt"
 	"os"
-
-	"github.com/webercoder/gocean/noaa/tidesandcurrents/utils"
 )
 
 // CommandHandler .
 type PredictionsCommandHandler struct {
 	flagSet *flag.FlagSet
+	predApi *PredictionsApi
 }
 
 // NewCommandHandler creates a new Tides and Currents CommandHandler
 func NewCommandHandler() *PredictionsCommandHandler {
 	return &PredictionsCommandHandler{
 		flagSet: flag.NewFlagSet("tidesandcurrents", flag.ExitOnError),
+		predApi: NewPredictionApi("gocean"),
 	}
 }
 
@@ -34,12 +34,11 @@ func (pch *PredictionsCommandHandler) HandleCommand(command string) error {
 		os.Exit(1)
 	}
 
-	tidesClient := utils.NewClient()
-	results, err := Retrieve(tidesClient, station, 24)
+	results, err := pch.predApi.Retrieve(station, 24)
 	if err != nil {
 		return fmt.Errorf("Could not load predictions for station")
 	}
-	PrintTabDelimited(station, results)
+	pch.predApi.PrintTabDelimited(station, results)
 	return nil
 }
 

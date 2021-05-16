@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/webercoder/gocean/lib"
+	tclib "github.com/webercoder/gocean/noaa/tidesandcurrents/lib"
 	"github.com/webercoder/gocean/noaa/tidesandcurrents/predictions"
-	"github.com/webercoder/gocean/noaa/tidesandcurrents/utils"
 )
 
 const NOAAPredictionsJSONData = `{
@@ -44,9 +44,12 @@ func (fsc *FakeTidesAndCurrentsClient) Get(url string) (resp *http.Response, err
 }
 
 func TestRetrieve(t *testing.T) {
+	api := &predictions.PredictionsApi{
+		App:    "gocean_test",
+		Client: &tclib.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAPredictionsJSONData}},
+	}
 	station := "9410170"
-	client := &utils.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAPredictionsJSONData}}
-	data, err := predictions.Retrieve(client, station, 1)
+	data, err := api.Retrieve(station, 1)
 	if err != nil {
 		t.Error("Did not expect error when retrieving tide data", err)
 	}

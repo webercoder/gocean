@@ -4,55 +4,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/url"
-	"time"
 
-	"github.com/webercoder/gocean/noaa/tidesandcurrents/utils"
+	"github.com/webercoder/gocean/noaa/tidesandcurrents/lib"
 )
 
-// Predictions contain tide predictions from a station
-type predictions struct {
-	Predictions []Prediction `json:"predictions"`
+func NewPredictionApi(app string) *PredictionsApi {
+	return &PredictionsApi{
+		Client: lib.NewClient(app),
+	}
 }
 
-// Prediction contains a single tide prediction for a specific time.
-type Prediction struct {
-	Time  string `json:"t"`
-	Value string `json:"v"`
-}
-
-// Retrieve gets the predictions from station.
-//
-// Example query:
-// https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=9410170&
-// product=predictions&units=metric&time_zone=lst_ldt&application=gocean&format=json&
-// datum=STND&begin_date=20210119&end_date=20210121
-func Retrieve(
-	ntc *utils.Client,
+// Retrieve gets the predictions from the station.
+func (predApi *PredictionsApi) Retrieve(
 	station string,
 	hours int,
 ) ([]Prediction, error) {
-	currentTime := time.Now()
-
-	baseURL, err := url.Parse(ntc.URL)
-	if err != nil {
-		fmt.Println("Unable to parse API URL", err)
-		return nil, err
-	}
-
-	params := url.Values{}
-	params.Add("application", "gocean")
-	params.Add("begin_date", currentTime.Format("20060102 15:04"))
-	params.Add("end_date", currentTime.Add(time.Hour*time.Duration(hours)).Format("20060102 15:04"))
-	params.Add("datum", "MLLW")
-	params.Add("format", "json")
-	params.Add("product", "predictions")
-	params.Add("station", station)
-	params.Add("time_zone", "lst_ldt")
-	params.Add("units", "english")
-	baseURL.RawQuery = params.Encode()
-
-	resp, err := ntc.HTTPClient.Get(baseURL.String())
+	req := lib.NewClientRequest(lib.WithStation(station))
+	resp, err := predApi.Client.Get(req)
 	if err != nil {
 		fmt.Println("Error retrieving predictions", err)
 		return nil, err
@@ -78,7 +46,7 @@ func Retrieve(
 }
 
 // PrintTabDelimited outputs the tides in text format.
-func PrintTabDelimited(station string, predictions []Prediction) {
+func (predApi *PredictionsApi) PrintTabDelimited(station string, predictions []Prediction) {
 	fmt.Println("Tide predictions for station:", station)
 	for _, prediction := range predictions {
 		fmt.Printf("  %s\t%s\n", prediction.Time, prediction.Value)
