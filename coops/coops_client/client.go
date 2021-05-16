@@ -64,11 +64,11 @@ func NewClientRequest(opts ...ClientRequestOption) *ClientRequest {
 	currentTime := time.Now()
 
 	const (
-		defaultDatum    = "MLLW"
-		defaultFormat   = "json"
-		defaultProduct  = "predictions"
-		defaultTimeZone = "lst_ldt"
-		defaultUnits    = "english"
+		defaultDatum    = DatumMLLW
+		defaultFormat   = ResponseFormatJSON
+		defaultProduct  = ProductPredictions
+		defaultTimeZone = TimeZoneFormatLSTLDT
+		defaultUnits    = UnitsEnglish
 
 		// Used to calculate time range
 		defaultHours = 12
@@ -97,13 +97,13 @@ func NewClientRequest(opts ...ClientRequestOption) *ClientRequest {
 func (r *ClientRequest) GetURLValues() *url.Values {
 	params := &url.Values{}
 	params.Add("begin_date", r.BeginDate.Format("20060102 15:04"))
-	params.Add("datum", r.Datum)
+	params.Add("datum", r.Datum.String())
 	params.Add("end_date", r.EndDate.Format("20060102 15:04"))
-	params.Add("format", r.Format)
-	params.Add("product", r.Product)
+	params.Add("format", r.Format.String())
+	params.Add("product", r.Product.String())
 	params.Add("station", r.Station)
-	params.Add("time_zone", r.TimeZone)
-	params.Add("units", r.Units)
+	params.Add("time_zone", r.TimeZone.String())
+	params.Add("units", r.Units.String())
 	return params
 }
 
@@ -113,7 +113,7 @@ func WithBeginDate(d time.Time) ClientRequestOption {
 	}
 }
 
-func WithDatum(datum string) ClientRequestOption {
+func WithDatum(datum Datum) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Datum = datum
 	}
@@ -125,13 +125,13 @@ func WithEndDate(d time.Time) ClientRequestOption {
 	}
 }
 
-func WithFormat(format string) ClientRequestOption {
+func WithFormat(format ResponseFormat) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Format = format
 	}
 }
 
-func WithProduct(product string) ClientRequestOption {
+func WithProduct(product Product) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Product = product
 	}
@@ -143,13 +143,13 @@ func WithStation(station string) ClientRequestOption {
 	}
 }
 
-func WithTimeZone(tz string) ClientRequestOption {
+func WithTimeZoneFormat(tzf TimeZoneFormat) ClientRequestOption {
 	return func(r *ClientRequest) {
-		r.TimeZone = tz
+		r.TimeZone = tzf
 	}
 }
 
-func WithUnits(units string) ClientRequestOption {
+func WithUnits(units Units) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Units = units
 	}

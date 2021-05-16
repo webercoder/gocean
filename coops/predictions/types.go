@@ -15,7 +15,7 @@ type Prediction struct {
 	Value string `json:"v"`
 }
 
-type PredictionsApi struct {
+type PredictionsAPI struct {
 	App    string
 	Client *coops_client.Client
 }

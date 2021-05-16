@@ -10,14 +10,14 @@ import (
 // CommandHandler .
 type PredictionsCommandHandler struct {
 	flagSet *flag.FlagSet
-	predApi *PredictionsApi
+	predAPI *PredictionsAPI
 }
 
 // NewCommandHandler creates a new Tides and Currents CommandHandler
 func NewCommandHandler() *PredictionsCommandHandler {
 	return &PredictionsCommandHandler{
 		flagSet: flag.NewFlagSet("tidesandcurrents", flag.ExitOnError),
-		predApi: NewPredictionApi("gocean"),
+		predAPI: NewPredictionsAPI("gocean"),
 	}
 }
 
@@ -34,11 +34,11 @@ func (pch *PredictionsCommandHandler) HandleCommand(command string) error {
 		os.Exit(1)
 	}
 
-	results, err := pch.predApi.Retrieve(station, 24)
+	results, err := pch.predAPI.Retrieve(station, 24)
 	if err != nil {
 		return fmt.Errorf("Could not load predictions for station")
 	}
-	pch.predApi.PrintTabDelimited(station, results)
+	pch.predAPI.PrintTabDelimited(station, results)
 	return nil
 }
 

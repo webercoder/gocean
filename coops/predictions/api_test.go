@@ -44,7 +44,7 @@ func (fsc *FakeTidesAndCurrentsClient) Get(url string) (resp *http.Response, err
 }
 
 func TestRetrieve(t *testing.T) {
-	api := &predictions.PredictionsApi{
+	api := &predictions.PredictionsAPI{
 		App:    "gocean_test",
 		Client: &coops_client.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAPredictionsJSONData}},
 	}

@@ -18,12 +18,22 @@ type ClientOption func(*Client)
 type ClientRequest struct {
 	BeginDate time.Time
 	EndDate   time.Time
-	Datum     string
-	Format    string
-	Product   string
+	Datum     Datum
+	Format    ResponseFormat
+	Product   Product
 	Station   string
-	TimeZone  string
-	Units     string
+	TimeZone  TimeZoneFormat
+	Units     Units
 }
 
 type ClientRequestOption func(*ClientRequest)
+
+type Datum int
+
+type Product int
+
+type ResponseFormat int
+
+type TimeZoneFormat int
+
+type Units int
