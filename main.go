@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
+	tidesandcurrents "github.com/webercoder/gocean/coops"
 	"github.com/webercoder/gocean/lib"
-	"github.com/webercoder/gocean/noaa/stations"
-	"github.com/webercoder/gocean/noaa/tidesandcurrents"
+	"github.com/webercoder/gocean/stations"
 )
 
 func usage(handlers map[string]lib.CommandHandler, msg ...string) {

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/webercoder/gocean/noaa/tidesandcurrents/lib"
+	"github.com/webercoder/gocean/coops/coops_client"
 )
 
 func NewPredictionApi(app string) *PredictionsApi {
 	return &PredictionsApi{
-		Client: lib.NewClient(app),
+		Client: coops_client.NewClient(app),
 	}
 }
 
@@ -19,7 +19,10 @@ func (predApi *PredictionsApi) Retrieve(
 	station string,
 	hours int,
 ) ([]Prediction, error) {
-	req := lib.NewClientRequest(lib.WithStation(station))
+	req := coops_client.NewClientRequest(
+		coops_client.WithStation(station),
+		coops_client.WithHours(hours),
+	)
 	resp, err := predApi.Client.Get(req)
 	if err != nil {
 		fmt.Println("Error retrieving predictions", err)

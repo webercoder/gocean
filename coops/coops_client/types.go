@@ -1,4 +1,4 @@
-package lib
+package coops_client
 
 import (
 	"time"

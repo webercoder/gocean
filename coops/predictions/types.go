@@ -1,7 +1,7 @@
 package predictions
 
 import (
-	"github.com/webercoder/gocean/noaa/tidesandcurrents/lib"
+	"github.com/webercoder/gocean/coops/coops_client"
 )
 
 // Predictions contain tide predictions from a station
@@ -17,5 +17,5 @@ type Prediction struct {
 
 type PredictionsApi struct {
 	App    string
-	Client *lib.Client
+	Client *coops_client.Client
 }

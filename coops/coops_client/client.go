@@ -1,4 +1,4 @@
-package lib
+package coops_client
 
 import (
 	"fmt"
@@ -75,23 +75,20 @@ func NewClientRequest(opts ...ClientRequestOption) *ClientRequest {
 	)
 
 	r := &ClientRequest{
-		Datum:    defaultDatum,
-		Format:   defaultFormat,
-		Product:  defaultProduct,
-		TimeZone: defaultTimeZone,
-		Units:    defaultUnits,
+		BeginDate: currentTime,
+		Datum:     defaultDatum,
+		Format:    defaultFormat,
+		Product:   defaultProduct,
+		TimeZone:  defaultTimeZone,
+		Units:     defaultUnits,
 	}
 
 	for _, opt := range opts {
 		opt(r)
 	}
 
-	if r.BeginDate.IsZero() {
-		r.BeginDate = currentTime
-	}
-
 	if r.EndDate.IsZero() {
-		r.EndDate = currentTime.Add(time.Hour * time.Duration(defaultHours))
+		WithHours(defaultHours)(r)
 	}
 
 	return r
@@ -100,8 +97,8 @@ func NewClientRequest(opts ...ClientRequestOption) *ClientRequest {
 func (r *ClientRequest) GetURLValues() *url.Values {
 	params := &url.Values{}
 	params.Add("begin_date", r.BeginDate.Format("20060102 15:04"))
-	params.Add("end_date", r.EndDate.Format("20060102 15:04"))
 	params.Add("datum", r.Datum)
+	params.Add("end_date", r.EndDate.Format("20060102 15:04"))
 	params.Add("format", r.Format)
 	params.Add("product", r.Product)
 	params.Add("station", r.Station)
@@ -110,8 +107,59 @@ func (r *ClientRequest) GetURLValues() *url.Values {
 	return params
 }
 
+func WithBeginDate(d time.Time) ClientRequestOption {
+	return func(r *ClientRequest) {
+		r.BeginDate = d
+	}
+}
+
+func WithDatum(datum string) ClientRequestOption {
+	return func(r *ClientRequest) {
+		r.Datum = datum
+	}
+}
+
+func WithEndDate(d time.Time) ClientRequestOption {
+	return func(r *ClientRequest) {
+		r.EndDate = d
+	}
+}
+
+func WithFormat(format string) ClientRequestOption {
+	return func(r *ClientRequest) {
+		r.Format = format
+	}
+}
+
+func WithProduct(product string) ClientRequestOption {
+	return func(r *ClientRequest) {
+		r.Product = product
+	}
+}
+
 func WithStation(station string) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Station = station
+	}
+}
+
+func WithTimeZone(tz string) ClientRequestOption {
+	return func(r *ClientRequest) {
+		r.TimeZone = tz
+	}
+}
+
+func WithUnits(units string) ClientRequestOption {
+	return func(r *ClientRequest) {
+		r.Units = units
+	}
+}
+
+// WithHours is a convenience function for setting the number of hours in the future
+// from the BeginDate. Not to be confused with the range parameter, which is not currently
+// supported by this library.
+func WithHours(hours int) ClientRequestOption {
+	return func(r *ClientRequest) {
+		r.EndDate = r.BeginDate.Add(time.Hour * time.Duration(hours))
 	}
 }

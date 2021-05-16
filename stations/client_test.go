@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/webercoder/gocean/lib"
-	"github.com/webercoder/gocean/noaa/stations"
+	"github.com/webercoder/gocean/stations"
 )
 
 type FakeStationsClient struct {

@@ -1,12 +1,12 @@
-package tidesandcurrents
+package coops
 
 import (
 	"errors"
 	"flag"
 	"fmt"
 
+	"github.com/webercoder/gocean/coops/predictions"
 	"github.com/webercoder/gocean/lib"
-	"github.com/webercoder/gocean/noaa/tidesandcurrents/predictions"
 )
 
 // CommandHandler .
