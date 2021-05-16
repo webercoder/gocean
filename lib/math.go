@@ -12,7 +12,7 @@ type GeoCoordinates struct {
 
 // HarvesineDistance finds the distance in KMs between two points on Earth.
 // Formula converted to golang from https://www.movable-type.co.uk/scripts/latlong.html
-func HarvesineDistance(coords1, coords2 GeoCoordinates) float64 { //lat1, long1, lat2, long2 float64) float64 {
+func HarvesineDistance(coords1, coords2 GeoCoordinates) float64 {
 	earthsRadiusKM := 6378.14
 	φ1 := coords1.Lat * math.Pi / 180 // φ, λ in radians
 	φ2 := coords2.Lat * math.Pi / 180
