@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/webercoder/gocean/utils"
+	"github.com/webercoder/gocean/lib"
 	"golang.org/x/net/html/charset"
 )
 
@@ -21,7 +21,7 @@ const MaxStationsSearchChunkSize = 10
 // Client interacts with NOAA.
 type Client struct {
 	URL           string
-	HTTPClient    utils.HTTPGetter
+	HTTPClient    lib.HTTPGetter
 	StationsCache []Station
 }
 
@@ -67,7 +67,7 @@ func (s *Client) GetStations(skipCache bool) []Station {
 }
 
 // GetNearestStation gets the nearest station to a given set of coordinates.
-func (s *Client) GetNearestStation(coords utils.GeoCoordinates) *StationDistance {
+func (s *Client) GetNearestStation(coords lib.GeoCoordinates) *StationDistance {
 	result := &StationDistance{Distance: -1.0, From: coords}
 	stations := s.GetStations(false)
 	var wg sync.WaitGroup
@@ -104,14 +104,14 @@ func (s *Client) GetNearestStation(coords utils.GeoCoordinates) *StationDistance
 func (s *Client) findNearestStation(
 	wg *sync.WaitGroup,
 	c chan *StationDistance,
-	coords utils.GeoCoordinates,
+	coords lib.GeoCoordinates,
 	stations []Station,
 ) {
 	defer wg.Done()
 	result := &StationDistance{Distance: -1.0, From: coords}
 
 	for _, station := range stations {
-		distance := utils.HarvesineDistance(coords, utils.GeoCoordinates{
+		distance := lib.HarvesineDistance(coords, lib.GeoCoordinates{
 			Lat:  station.Metadata.Location.Lat,
 			Long: station.Metadata.Location.Long,
 		})

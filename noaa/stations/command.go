@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/webercoder/gocean/utils"
+	"github.com/webercoder/gocean/lib"
 )
 
 // CommandHandler .
@@ -36,7 +36,7 @@ func (sch *StationsCommandHandler) HandleCommand(command string) error {
 
 	fmt.Println("Finding nearest station to", postcode)
 
-	coords, err := utils.FindCoordsForPostcode(postcode)
+	coords, err := lib.FindCoordsForPostcode(postcode)
 	if err != nil {
 		return fmt.Errorf("Could not find coordinates for the provided location %s", postcode)
 	}

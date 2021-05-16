@@ -1,4 +1,4 @@
-package utils
+package lib
 
 // CensusZipCoords is a huge list of zip code to coordinate data from the Census Bureau.
 var CensusZipCoords = map[string]GeoCoordinates{

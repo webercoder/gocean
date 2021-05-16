@@ -3,13 +3,13 @@ package stations
 import (
 	"encoding/xml"
 
-	"github.com/webercoder/gocean/utils"
+	"github.com/webercoder/gocean/lib"
 )
 
 // StationDistance describes the distance from a set of coordinates to a station.
 type StationDistance struct {
 	Distance float64
-	From     utils.GeoCoordinates
+	From     lib.GeoCoordinates
 	Station  Station
 }
 

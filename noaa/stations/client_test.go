@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/webercoder/gocean/lib"
 	"github.com/webercoder/gocean/noaa/stations"
 	"github.com/webercoder/gocean/testutils"
-	"github.com/webercoder/gocean/utils"
 )
 
 type FakeStationsClient struct {
@@ -131,7 +131,7 @@ func TestNOAAStationClient_GetStations(t *testing.T) {
 
 func TestNOAAStationClient_GetNearestStation(t *testing.T) {
 	retriever := &stations.Client{HTTPClient: &FakeStationsClient{XML: SampleStationsData}}
-	sanDiegoCityHall := utils.GeoCoordinates{Lat: 32.716868, Long: -117.162837}
+	sanDiegoCityHall := lib.GeoCoordinates{Lat: 32.716868, Long: -117.162837}
 	expectedStationID := 9410170
 	result := retriever.GetNearestStation(sanDiegoCityHall)
 	if result.Station.ID != expectedStationID {
@@ -141,7 +141,7 @@ func TestNOAAStationClient_GetNearestStation(t *testing.T) {
 		t.Error("From should be the coords that were passed in", result.From, sanDiegoCityHall)
 	}
 
-	pearlHarbor := utils.GeoCoordinates{Lat: 21.339884, Long: -157.970901}
+	pearlHarbor := lib.GeoCoordinates{Lat: 21.339884, Long: -157.970901}
 	expectedStationID = 1612340
 	result = retriever.GetNearestStation(pearlHarbor)
 	if result.Station.ID != expectedStationID {
