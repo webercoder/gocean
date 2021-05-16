@@ -29,6 +29,7 @@ func (s Units) String() string {
 	return [...]string{"english", "metric"}[s]
 }
 
+// Datums! https://tidesandcurrents.noaa.gov/datum_options.html
 const (
 	DatumCRD  Datum = iota // Columbia River Datum
 	DatumIGLD              // International Great Lakes Datum
@@ -38,7 +39,7 @@ const (
 	DatumMTL               // Mean Tide Level
 	DatumMSL               // Mean Sea Level
 	DatumMLW               // Mean Low Water
-	DatumMLLW              // Mean Lower Low Water
+	DatumMLLW              // Mean Lower Low Water (Seems to be the normal datum for tide levels)
 	DatumNAVD              // North American Vertical Datum
 	DatumSTND              // Station Datum
 )

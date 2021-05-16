@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/webercoder/gocean/coops/predictions"
+	"github.com/webercoder/gocean/coops/water_level"
 	"github.com/webercoder/gocean/lib"
 )
 
@@ -19,6 +20,7 @@ func NewTidesAndCurrentsCommandHandler() *TidesAndCurrentsCommandHandler {
 	return &TidesAndCurrentsCommandHandler{
 		subHandlers: map[string]lib.CommandHandler{
 			"predictions": predictions.NewCommandHandler(),
+			"waterlevels": water_level.NewCommandHandler(),
 		},
 	}
 }

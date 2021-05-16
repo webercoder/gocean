@@ -2,6 +2,7 @@ package coops_client
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
@@ -46,6 +47,25 @@ func (c *Client) Get(r *ClientRequest) (*http.Response, error) {
 	baseURL.RawQuery = params.Encode()
 
 	return c.HTTPClient.Get(baseURL.String())
+}
+
+func (c *Client) GetJSON(r *ClientRequest) ([]byte, error) {
+	resp, err := c.Get(r)
+	if err != nil {
+		return nil, fmt.Errorf("error retrieving data: %v", err)
+	}
+
+	if resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	jsonData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading predictions request body", err)
+		return nil, err
+	}
+
+	return jsonData, nil
 }
 
 func WithURL(url string) ClientOption {

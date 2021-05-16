@@ -41,9 +41,30 @@ For example:
 ```bash
 $ gocean tidesandcurrents predictions 9410230
 Tide predictions for station: 9410230
-  2021-05-14 22:06\t5.111
-  2021-05-14 22:12\t5.136
-  2021-05-14 22:18\t5.157
+  2021-05-14 22:06	5.111
+  2021-05-14 22:12	5.136
+  2021-05-14 22:18	5.157
+...
+```
+
+### Get Water Levels
+
+```bash
+gocean tidesandcurrents waterlevels [station-id]
+```
+
+For example:
+
+```bash
+$ gocean tidesandcurrents waterlevels 8454000
+Tide water levels for station: 8454000
+  2021-05-16 16:54	0.635	p
+  2021-05-16 17:00	0.661	p
+  2021-05-16 17:06	0.625	p
+  2021-05-16 17:12	0.523	p
+  2021-05-16 17:18	0.444	p
+  2021-05-16 17:24	0.415	p
+  2021-05-16 17:30	0.421	p
 ...
 ```
 

@@ -26,6 +26,14 @@ type ClientRequest struct {
 	Units     Units
 }
 
+type ClientErrorResponse struct {
+	Err ClientErrorResponseMessage `json:"error"`
+}
+
+type ClientErrorResponseMessage struct {
+	Message string `json:"message"`
+}
+
 type ClientRequestOption func(*ClientRequest)
 
 type Datum int

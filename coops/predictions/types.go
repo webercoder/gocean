@@ -5,7 +5,7 @@ import (
 )
 
 // Predictions contain tide predictions from a station
-type predictions struct {
+type Predictions struct {
 	Predictions []Prediction `json:"predictions"`
 }
 
