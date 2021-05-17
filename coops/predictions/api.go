@@ -4,25 +4,26 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/webercoder/gocean/coops/coops_client"
+	"github.com/webercoder/gocean/coops/coopsclient"
 )
 
-func NewPredictionsAPI(app string) *PredictionsAPI {
-	return &PredictionsAPI{
-		Client: coops_client.NewClient(app),
+// NewAPI creates a new API for interacting retrieving tide predictions.
+func NewAPI(app string) *API {
+	return &API{
+		Client: coopsclient.NewClient(app),
 	}
 }
 
 // Retrieve gets the predictions from the station.
-func (predAPI *PredictionsAPI) Retrieve(
+func (predAPI *API) Retrieve(
 	station string,
 	hours int,
 ) ([]Prediction, error) {
 	jsonData, err := predAPI.Client.GetJSON(
-		coops_client.NewClientRequest(
-			coops_client.WithProduct(coops_client.ProductPredictions),
-			coops_client.WithStation(station),
-			coops_client.WithHours(hours),
+		coopsclient.NewClientRequest(
+			coopsclient.WithProduct(coopsclient.ProductPredictions),
+			coopsclient.WithStation(station),
+			coopsclient.WithHours(hours),
 		),
 	)
 	if err != nil {
@@ -39,7 +40,7 @@ func (predAPI *PredictionsAPI) Retrieve(
 }
 
 // PrintTabDelimited outputs the tides in text format.
-func (predAPI *PredictionsAPI) PrintTabDelimited(station string, predictions []Prediction) {
+func (predAPI *API) PrintTabDelimited(station string, predictions []Prediction) {
 	fmt.Println("Tide predictions for station:", station)
 	for _, prediction := range predictions {
 		fmt.Printf("  %s\t%s\n", prediction.Time, prediction.Value)

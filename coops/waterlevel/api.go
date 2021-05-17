@@ -1,28 +1,29 @@
-package water_level
+package waterlevel
 
 import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/webercoder/gocean/coops/coops_client"
+	"github.com/webercoder/gocean/coops/coopsclient"
 )
 
-func NewWaterLevelAPI(app string) *WaterLevelAPI {
-	return &WaterLevelAPI{
-		Client: coops_client.NewClient(app),
+// NewAPI creates a new water level API client.
+func NewAPI(app string) *API {
+	return &API{
+		Client: coopsclient.NewClient(app),
 	}
 }
 
 // Retrieve gets the WaterLevels from the station.
-func (predAPI *WaterLevelAPI) Retrieve(
+func (predAPI *API) Retrieve(
 	station string,
 	hours int,
 ) ([]WaterLevel, error) {
 	jsonData, err := predAPI.Client.GetJSON(
-		coops_client.NewClientRequest(
-			coops_client.WithProduct(coops_client.ProductWaterLevel),
-			coops_client.WithStation(station),
-			coops_client.WithHours(hours),
+		coopsclient.NewClientRequest(
+			coopsclient.WithProduct(coopsclient.ProductWaterLevel),
+			coopsclient.WithStation(station),
+			coopsclient.WithHours(hours),
 		),
 	)
 	if err != nil {
@@ -36,7 +37,7 @@ func (predAPI *WaterLevelAPI) Retrieve(
 	}
 
 	if len(levels.WaterLevels) == 0 {
-		jsonErrResp := &coops_client.ClientErrorResponse{}
+		jsonErrResp := &coopsclient.ClientErrorResponse{}
 		err = json.Unmarshal(jsonData, &jsonErrResp)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing waterlevels json data: %v", err)
@@ -51,9 +52,14 @@ func (predAPI *WaterLevelAPI) Retrieve(
 }
 
 // PrintTabDelimited outputs the tides in text format.
-func (predAPI *WaterLevelAPI) PrintTabDelimited(station string, WaterLevels []WaterLevel) {
+func (predAPI *API) PrintTabDelimited(station string, levels []WaterLevel) {
 	fmt.Println("Tide water levels for station:", station)
-	for _, WaterLevel := range WaterLevels {
-		fmt.Printf("  %s\t%s\t%s\n", WaterLevel.Time, WaterLevel.Value, WaterLevel.Quality)
+	for _, level := range levels {
+		quality := "Preliminary"
+		if level.Quality == "v" {
+			quality = "Verified"
+		}
+
+		fmt.Printf("  %s\t%s\t%s\n", level.Time, level.Value, quality)
 	}
 }

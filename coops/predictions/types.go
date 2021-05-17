@@ -1,7 +1,7 @@
 package predictions
 
 import (
-	"github.com/webercoder/gocean/coops/coops_client"
+	"github.com/webercoder/gocean/coops/coopsclient"
 )
 
 // Predictions contain tide predictions from a station
@@ -15,7 +15,8 @@ type Prediction struct {
 	Value string `json:"v"`
 }
 
-type PredictionsAPI struct {
+// API interacts with the predictions product.
+type API struct {
 	App    string
-	Client *coops_client.Client
+	Client *coopsclient.Client
 }

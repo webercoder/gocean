@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/webercoder/gocean/coops/coops_client"
+	"github.com/webercoder/gocean/coops/coopsclient"
 	"github.com/webercoder/gocean/coops/predictions"
 	"github.com/webercoder/gocean/lib"
 )
@@ -44,9 +44,9 @@ func (fsc *FakeTidesAndCurrentsClient) Get(url string) (resp *http.Response, err
 }
 
 func TestRetrieve(t *testing.T) {
-	api := &predictions.PredictionsAPI{
+	api := &predictions.API{
 		App:    "gocean_test",
-		Client: &coops_client.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAPredictionsJSONData}},
+		Client: &coopsclient.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAPredictionsJSONData}},
 	}
 	station := "9410170"
 	data, err := api.Retrieve(station, 1)

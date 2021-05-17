@@ -1,4 +1,4 @@
-package water_level_test
+package waterlevel_test
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/webercoder/gocean/coops/coops_client"
-	"github.com/webercoder/gocean/coops/water_level"
+	"github.com/webercoder/gocean/coops/coopsclient"
+	"github.com/webercoder/gocean/coops/waterlevel"
 	"github.com/webercoder/gocean/lib"
 )
 
@@ -63,9 +63,9 @@ func (fsc *FakeTidesAndCurrentsClient) Get(url string) (resp *http.Response, err
 }
 
 func TestRetrieve(t *testing.T) {
-	api := &water_level.WaterLevelAPI{
+	api := &waterlevel.API{
 		App:    "gocean_test",
-		Client: &coops_client.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAWaterLevelsJSONData}},
+		Client: &coopsclient.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAWaterLevelsJSONData}},
 	}
 	station := "9410170"
 	data, err := api.Retrieve(station, 1)
@@ -90,9 +90,9 @@ func TestRetrieve(t *testing.T) {
 }
 
 func TestRetrieveError(t *testing.T) {
-	api := &water_level.WaterLevelAPI{
+	api := &waterlevel.API{
 		App:    "gocean_test",
-		Client: &coops_client.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAWaterLevelsJSONErrorData}},
+		Client: &coopsclient.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAWaterLevelsJSONErrorData}},
 	}
 	station := "9410170"
 	_, err := api.Retrieve(station, 1)
