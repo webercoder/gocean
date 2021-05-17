@@ -4,19 +4,17 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-
-	"github.com/webercoder/gocean/src/lib"
 )
 
 // COOPSCommandHandler is a composite of all the CO-OPS command-line commands.
 type COOPSCommandHandler struct {
-	subHandlers map[string]lib.CommandHandler
+	subHandlers map[string]Handler
 }
 
 // NewCOOPSCommandHandler creates a new Tides and Currents CommandHandler.
 func NewCOOPSCommandHandler() *COOPSCommandHandler {
 	return &COOPSCommandHandler{
-		subHandlers: map[string]lib.CommandHandler{
+		subHandlers: map[string]Handler{
 			"predictions": NewPredictionsCommandHandler(),
 			"waterlevels": NewWaterLevelsCommandHandler(),
 		},

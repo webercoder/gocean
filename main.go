@@ -6,10 +6,9 @@ import (
 	"os"
 
 	"github.com/webercoder/gocean/command"
-	"github.com/webercoder/gocean/src/lib"
 )
 
-func usage(handlers map[string]lib.CommandHandler, msg ...string) {
+func usage(handlers map[string]command.Handler, msg ...string) {
 	if len(msg) > 0 {
 		for i := 0; i < len(msg); i++ {
 			fmt.Println(msg)
@@ -25,7 +24,7 @@ func usage(handlers map[string]lib.CommandHandler, msg ...string) {
 }
 
 func main() {
-	handlers := map[string]lib.CommandHandler{
+	handlers := map[string]command.Handler{
 		"stations":         command.NewStationsCommandHandler(),
 		"tidesandcurrents": command.NewCOOPSCommandHandler(),
 	}
@@ -52,7 +51,7 @@ func main() {
 	}
 
 	if err := fset.Parse(os.Args[1:]); err != nil {
-		handler.Usage(errors.New("Unable to parse command-line options"))
+		handler.Usage(errors.New("unable to parse command-line options"))
 		os.Exit(1)
 	}
 
