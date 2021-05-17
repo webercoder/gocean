@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "\nRuning revive linter..."
+revive --formatter friendly ./...
+
+echo "Building..."
+go build
+
+echo "Running tests ..."
+go test ./...
+
+echo "pre-commit complete.\n"
