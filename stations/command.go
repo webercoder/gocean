@@ -9,25 +9,25 @@ import (
 	"github.com/webercoder/gocean/lib"
 )
 
-// CommandHandler .
-type StationsCommandHandler struct {
+// CommandHandler handles stations commands.
+type CommandHandler struct {
 	flagSet *flag.FlagSet
 }
 
 // NewCommandHandler creates a new Stations CommandHandler.
-func NewStationsCommandHandler() *StationsCommandHandler {
-	return &StationsCommandHandler{
+func NewCommandHandler() *CommandHandler {
+	return &CommandHandler{
 		flagSet: flag.NewFlagSet("stations", flag.ExitOnError),
 	}
 }
 
-// GetFlagSet returns this command's flagSet for parsing command line options.
-func (sch *StationsCommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
+// GetFlagSet returns this command's flagSet for parsing command-line options.
+func (sch *CommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
 	return sch.flagSet, nil
 }
 
 // HandleCommand handles the stations command.
-func (sch *StationsCommandHandler) HandleCommand(command string) error {
+func (sch *CommandHandler) HandleCommand(command string) error {
 	postcode := sch.flagSet.Arg(1)
 	if len(postcode) == 0 {
 		sch.Usage(errors.New("postcode is required"))
@@ -54,7 +54,8 @@ func (sch *StationsCommandHandler) HandleCommand(command string) error {
 	return nil
 }
 
-func (sch *StationsCommandHandler) Usage(err ...error) {
+// Usage prints how to use this command.
+func (sch *CommandHandler) Usage(err ...error) {
 	if len(err) > 0 {
 		fmt.Printf("The following errors occurred: %v\n", err)
 		fmt.Println("Usage:")

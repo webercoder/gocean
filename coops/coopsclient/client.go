@@ -1,4 +1,4 @@
-package coops_client
+package coopsclient
 
 import (
 	"fmt"
@@ -10,8 +10,10 @@ import (
 	"github.com/webercoder/gocean/lib"
 )
 
+// APIDateFormat is the date format used by the NOAA CO-OPS API.
 const APIDateFormat = "20060102 15:04"
 
+// NewClient returns a new CO-OPS client.
 func NewClient(application string, opts ...ClientOption) *Client {
 	const defaultTidesEndpoint = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
 
@@ -31,7 +33,9 @@ func NewClient(application string, opts ...ClientOption) *Client {
 	return c
 }
 
-// Example query:
+// Get queries the CO-OPS API for a given request.
+//
+// Example raw query:
 // https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=9410170&
 // product=predictions&units=metric&time_zone=lst_ldt&application=gocean&format=json&
 // datum=STND&begin_date=20210119&end_date=20210121
@@ -49,6 +53,7 @@ func (c *Client) Get(r *ClientRequest) (*http.Response, error) {
 	return c.HTTPClient.Get(baseURL.String())
 }
 
+// GetJSON queries the CO-OPS API for a given request and returns JSON data as a byte slice.
 func (c *Client) GetJSON(r *ClientRequest) ([]byte, error) {
 	resp, err := c.Get(r)
 	if err != nil {
@@ -68,18 +73,21 @@ func (c *Client) GetJSON(r *ClientRequest) ([]byte, error) {
 	return jsonData, nil
 }
 
+// WithURL overrides the default API URL for this client.
 func WithURL(url string) ClientOption {
 	return func(c *Client) {
 		c.URL = url
 	}
 }
 
+// WithHTTPClient overrides the default HTTP client for this CO-OPS client.
 func WithHTTPClient(getter lib.HTTPGetter) ClientOption {
 	return func(c *Client) {
 		c.HTTPClient = getter
 	}
 }
 
+// NewClientRequest creates a new request.
 func NewClientRequest(opts ...ClientRequestOption) *ClientRequest {
 	currentTime := time.Now()
 
@@ -114,6 +122,7 @@ func NewClientRequest(opts ...ClientRequestOption) *ClientRequest {
 	return r
 }
 
+// GetURLValues retrieves the settings in this request as a url.Values structure.
 func (r *ClientRequest) GetURLValues() *url.Values {
 	params := &url.Values{}
 	params.Add("begin_date", r.BeginDate.Format("20060102 15:04"))
@@ -127,48 +136,56 @@ func (r *ClientRequest) GetURLValues() *url.Values {
 	return params
 }
 
+// WithBeginDate overrides the default being date for the result set.
 func WithBeginDate(d time.Time) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.BeginDate = d
 	}
 }
 
+// WithDatum overrides the default NOAA tide datum.
 func WithDatum(datum Datum) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Datum = datum
 	}
 }
 
+// WithEndDate overrides the default end date for the result set.
 func WithEndDate(d time.Time) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.EndDate = d
 	}
 }
 
+// WithFormat overrides the default response format.
 func WithFormat(format ResponseFormat) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Format = format
 	}
 }
 
+// WithProduct sets product to query.
 func WithProduct(product Product) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Product = product
 	}
 }
 
+// WithStation sets NOAA measuring station to query.
 func WithStation(station string) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Station = station
 	}
 }
 
+// WithTimeZoneFormat changes the time zone format of the request.
 func WithTimeZoneFormat(tzf TimeZoneFormat) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.TimeZone = tzf
 	}
 }
 
+// WithUnits sets the measuring units for the response data.
 func WithUnits(units Units) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.Units = units

@@ -27,7 +27,7 @@ func usage(handlers map[string]lib.CommandHandler, msg ...string) {
 
 func main() {
 	handlers := map[string]lib.CommandHandler{
-		"stations":         stations.NewStationsCommandHandler(),
+		"stations":         stations.NewCommandHandler(),
 		"tidesandcurrents": tidesandcurrents.NewTidesAndCurrentsCommandHandler(),
 	}
 
@@ -53,7 +53,7 @@ func main() {
 	}
 
 	if err := fset.Parse(os.Args[1:]); err != nil {
-		handler.Usage(errors.New("Unable to parse command line options"))
+		handler.Usage(errors.New("Unable to parse command-line options"))
 		os.Exit(1)
 	}
 
