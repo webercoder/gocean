@@ -73,9 +73,9 @@ Tide water levels for station: 8454000
 
 ## Development Plan
 
-The `coops` directory contains libraries for connecting to the [NOAA CO-OPS API](https://api.tidesandcurrents.noaa.gov/api/prod/).
+The `src/coops` directory contains libraries for connecting to the [NOAA CO-OPS API](https://api.tidesandcurrents.noaa.gov/api/prod/).
 
-The `stations` directory contains libraries for retrieving NOAA oceanic station
+The `src/stations` directory contains libraries for retrieving NOAA oceanic station
 data.
 
 The top-level program has a few convenience functions for querying the API but will
