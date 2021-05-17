@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/lib"
 )
 
 func TestHarvestineDistance(t *testing.T) {

@@ -1,33 +1,35 @@
-package predictions
+package command
 
 import (
 	"errors"
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/webercoder/gocean/src/coops/predictions"
 )
 
-// CommanderHandler handles predictions commands.
-type CommanderHandler struct {
+// PredictionsCommandHandler handles predictions commands.
+type PredictionsCommandHandler struct {
 	flagSet *flag.FlagSet
-	predAPI *API
+	predAPI *predictions.API
 }
 
-// NewCommandHandler creates a new Tides and Currents CommandHandler
-func NewCommandHandler() *CommanderHandler {
-	return &CommanderHandler{
+// NewPredictionsCommandHandler creates a new Tides and Currents CommandHandler
+func NewPredictionsCommandHandler() *PredictionsCommandHandler {
+	return &PredictionsCommandHandler{
 		flagSet: flag.NewFlagSet("tidesandcurrents", flag.ExitOnError),
-		predAPI: NewAPI("gocean"),
+		predAPI: predictions.NewAPI("gocean"),
 	}
 }
 
 // GetFlagSet returns this command's flagSet for parsing command-line options.
-func (pch *CommanderHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
+func (pch *PredictionsCommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
 	return pch.flagSet, nil
 }
 
 // HandleCommand processes the predictions command.
-func (pch *CommanderHandler) HandleCommand(command string) error {
+func (pch *PredictionsCommandHandler) HandleCommand(command string) error {
 	station := pch.flagSet.Arg(2)
 	if len(station) == 0 {
 		pch.Usage(errors.New("station is required"))
@@ -43,7 +45,7 @@ func (pch *CommanderHandler) HandleCommand(command string) error {
 }
 
 // Usage prints how to use this command.
-func (pch *CommanderHandler) Usage(err ...error) {
+func (pch *PredictionsCommandHandler) Usage(err ...error) {
 	if len(err) > 0 {
 		fmt.Printf("The following errors occurred: %v\n", err)
 		fmt.Println("Usage:")

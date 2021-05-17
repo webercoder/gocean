@@ -3,7 +3,7 @@ package coopsclient
 import (
 	"time"
 
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/lib"
 )
 
 // Client interacts with the NOAA api.

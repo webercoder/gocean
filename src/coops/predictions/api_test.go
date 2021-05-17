@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/webercoder/gocean/coops/coopsclient"
-	"github.com/webercoder/gocean/coops/predictions"
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/coops/coopsclient"
+	"github.com/webercoder/gocean/src/coops/predictions"
+	"github.com/webercoder/gocean/src/lib"
 )
 
 const NOAAPredictionsJSONData = `{

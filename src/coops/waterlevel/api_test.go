@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/webercoder/gocean/coops/coopsclient"
-	"github.com/webercoder/gocean/coops/waterlevel"
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/coops/coopsclient"
+	"github.com/webercoder/gocean/src/coops/waterlevel"
+	"github.com/webercoder/gocean/src/lib"
 )
 
 const NOAAWaterLevelsJSONData = `{

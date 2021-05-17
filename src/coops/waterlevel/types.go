@@ -1,6 +1,6 @@
 package waterlevel
 
-import "github.com/webercoder/gocean/coops/coopsclient"
+import "github.com/webercoder/gocean/src/coops/coopsclient"
 
 // API interacts with the water level product.
 type API struct {

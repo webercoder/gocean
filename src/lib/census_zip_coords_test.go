@@ -3,7 +3,7 @@ package lib_test
 import (
 	"testing"
 
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/lib"
 )
 
 func TestCensusZipCoords(t *testing.T) {

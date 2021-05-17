@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/lib"
 	"golang.org/x/net/html/charset"
 )
 

@@ -1,4 +1,4 @@
-package stations
+package command
 
 import (
 	"errors"
@@ -6,28 +6,29 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/lib"
+	"github.com/webercoder/gocean/src/stations"
 )
 
-// CommandHandler handles stations commands.
-type CommandHandler struct {
+// StationsCommandHandler handles stations commands.
+type StationsCommandHandler struct {
 	flagSet *flag.FlagSet
 }
 
-// NewCommandHandler creates a new Stations CommandHandler.
-func NewCommandHandler() *CommandHandler {
-	return &CommandHandler{
+// NewStationsCommandHandler creates a new Stations CommandHandler.
+func NewStationsCommandHandler() *StationsCommandHandler {
+	return &StationsCommandHandler{
 		flagSet: flag.NewFlagSet("stations", flag.ExitOnError),
 	}
 }
 
 // GetFlagSet returns this command's flagSet for parsing command-line options.
-func (sch *CommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
+func (sch *StationsCommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
 	return sch.flagSet, nil
 }
 
 // HandleCommand handles the stations command.
-func (sch *CommandHandler) HandleCommand(command string) error {
+func (sch *StationsCommandHandler) HandleCommand(command string) error {
 	postcode := sch.flagSet.Arg(1)
 	if len(postcode) == 0 {
 		sch.Usage(errors.New("postcode is required"))
@@ -38,10 +39,10 @@ func (sch *CommandHandler) HandleCommand(command string) error {
 
 	coords, err := lib.FindCoordsForPostcode(postcode)
 	if err != nil {
-		return fmt.Errorf("Could not find coordinates for the provided location %s", postcode)
+		return fmt.Errorf("could not find coordinates for the provided location %s", postcode)
 	}
 
-	stationsClient := NewClient()
+	stationsClient := stations.NewClient()
 	result := *stationsClient.GetNearestStation(*coords)
 	fmt.Printf(
 		"The nearest Station is \"%s\" (ID: %d), which is %f kms away from %s.\n",
@@ -55,7 +56,7 @@ func (sch *CommandHandler) HandleCommand(command string) error {
 }
 
 // Usage prints how to use this command.
-func (sch *CommandHandler) Usage(err ...error) {
+func (sch *StationsCommandHandler) Usage(err ...error) {
 	if len(err) > 0 {
 		fmt.Printf("The following errors occurred: %v\n", err)
 		fmt.Println("Usage:")

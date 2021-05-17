@@ -1,7 +1,7 @@
 package predictions
 
 import (
-	"github.com/webercoder/gocean/coops/coopsclient"
+	"github.com/webercoder/gocean/src/coops/coopsclient"
 )
 
 // Predictions contain tide predictions from a station

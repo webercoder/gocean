@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/webercoder/gocean/lib"
-	"github.com/webercoder/gocean/stations"
+	"github.com/webercoder/gocean/src/lib"
+	"github.com/webercoder/gocean/src/stations"
 )
 
 type FakeStationsClient struct {

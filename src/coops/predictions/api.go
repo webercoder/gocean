@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/webercoder/gocean/coops/coopsclient"
+	"github.com/webercoder/gocean/src/coops/coopsclient"
 )
 
 // NewAPI creates a new API for interacting retrieving tide predictions.

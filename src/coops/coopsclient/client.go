@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/lib"
 )
 
 // APIDateFormat is the date format used by the NOAA CO-OPS API.

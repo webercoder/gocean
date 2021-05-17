@@ -3,7 +3,7 @@ package stations
 import (
 	"encoding/xml"
 
-	"github.com/webercoder/gocean/lib"
+	"github.com/webercoder/gocean/src/lib"
 )
 
 // StationDistance describes the distance from a set of coordinates to a station.

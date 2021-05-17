@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	tidesandcurrents "github.com/webercoder/gocean/coops"
-	"github.com/webercoder/gocean/lib"
-	"github.com/webercoder/gocean/stations"
+	"github.com/webercoder/gocean/command"
+	"github.com/webercoder/gocean/src/lib"
 )
 
 func usage(handlers map[string]lib.CommandHandler, msg ...string) {
@@ -27,8 +26,8 @@ func usage(handlers map[string]lib.CommandHandler, msg ...string) {
 
 func main() {
 	handlers := map[string]lib.CommandHandler{
-		"stations":         stations.NewCommandHandler(),
-		"tidesandcurrents": tidesandcurrents.NewTidesAndCurrentsCommandHandler(),
+		"stations":         command.NewStationsCommandHandler(),
+		"tidesandcurrents": command.NewCOOPSCommandHandler(),
 	}
 
 	if len(os.Args) < 2 {
