@@ -6,20 +6,20 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/webercoder/gocean/src/coops/predictions"
+	"github.com/webercoder/gocean/src/coops"
 )
 
 // PredictionsCommandHandler handles predictions commands.
 type PredictionsCommandHandler struct {
 	flagSet *flag.FlagSet
-	predAPI *predictions.API
+	predAPI *coops.PredictionsAPI
 }
 
 // NewPredictionsCommandHandler creates a new Tides and Currents CommandHandler
 func NewPredictionsCommandHandler() *PredictionsCommandHandler {
 	return &PredictionsCommandHandler{
-		flagSet: flag.NewFlagSet("tidesandcurrents", flag.ExitOnError),
-		predAPI: predictions.NewAPI("gocean"),
+		flagSet: flag.NewFlagSet("coops", flag.ExitOnError),
+		predAPI: coops.NewPredictionsAPI("gocean"),
 	}
 }
 

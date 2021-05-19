@@ -16,7 +16,7 @@ func NewCOOPSCommandHandler() *COOPSCommandHandler {
 	return &COOPSCommandHandler{
 		subHandlers: map[string]Handler{
 			"predictions": NewPredictionsCommandHandler(),
-			"waterlevels": NewWaterLevelsCommandHandler(),
+			"water_level": NewWaterLevelsCommandHandler(),
 		},
 	}
 }
@@ -52,6 +52,6 @@ func (cch *COOPSCommandHandler) HandleCommand(command string) error {
 // Usage prints the usage for all subcommands of this command.
 func (cch *COOPSCommandHandler) Usage(err ...error) {
 	for key := range cch.subHandlers {
-		fmt.Printf("tidesandcurrents %s ...\n", key)
+		fmt.Printf("coops %s ...\n", key)
 	}
 }

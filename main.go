@@ -25,8 +25,8 @@ func usage(handlers map[string]command.Handler, msg ...string) {
 
 func main() {
 	handlers := map[string]command.Handler{
-		"stations":         command.NewStationsCommandHandler(),
-		"tidesandcurrents": command.NewCOOPSCommandHandler(),
+		"stations": command.NewStationsCommandHandler(),
+		"coops":    command.NewCOOPSCommandHandler(),
 	}
 
 	if len(os.Args) < 2 {

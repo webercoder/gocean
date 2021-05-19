@@ -1,12 +1,9 @@
-package predictions_test
+package coops_test
 
 import (
-	"net/http"
 	"testing"
 
-	"github.com/webercoder/gocean/src/coops/coopsclient"
-	"github.com/webercoder/gocean/src/coops/predictions"
-	"github.com/webercoder/gocean/src/lib"
+	"github.com/webercoder/gocean/src/coops"
 )
 
 const NOAAPredictionsJSONData = `{
@@ -28,25 +25,10 @@ const NOAAPredictionsJSONData = `{
     }]
 }`
 
-type FakeTidesAndCurrentsClient struct {
-	Err      error
-	JsonData string
-}
-
-func (fsc *FakeTidesAndCurrentsClient) Get(url string) (resp *http.Response, err error) {
-	if fsc.Err != nil {
-		return nil, fsc.Err
-	}
-
-	return &http.Response{
-		Body: lib.NewStringReadCloser(fsc.JsonData),
-	}, nil
-}
-
-func TestRetrieve(t *testing.T) {
-	api := &predictions.API{
+func TestPredictionsRetrieve(t *testing.T) {
+	api := &coops.PredictionsAPI{
 		App:    "gocean_test",
-		Client: &coopsclient.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAPredictionsJSONData}},
+		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAPredictionsJSONData}},
 	}
 	station := "9410170"
 	data, err := api.Retrieve(station, 1)

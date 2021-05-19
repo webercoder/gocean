@@ -6,20 +6,20 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/webercoder/gocean/src/coops/waterlevel"
+	"github.com/webercoder/gocean/src/coops"
 )
 
 // WaterLevelsCommandHandler handles water levels commands.
 type WaterLevelsCommandHandler struct {
 	flagSet *flag.FlagSet
-	predAPI *waterlevel.API
+	predAPI *coops.WaterLevelAPI
 }
 
 // NewWaterLevelsCommandHandler creates a new Tides and Currents CommandHandler.
 func NewWaterLevelsCommandHandler() *WaterLevelsCommandHandler {
 	return &WaterLevelsCommandHandler{
-		flagSet: flag.NewFlagSet("tidesandcurrents", flag.ExitOnError),
-		predAPI: waterlevel.NewAPI("gocean"),
+		flagSet: flag.NewFlagSet("coops", flag.ExitOnError),
+		predAPI: coops.NewWaterLevelAPI("gocean"),
 	}
 }
 
