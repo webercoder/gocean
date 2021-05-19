@@ -11,7 +11,7 @@ and not ready for external consumption.
 
 Retrieve the src and install using the following commands.
 
-```bash
+```txt
 go get github.com/webercoder/gocean/...
 go install github.com/webercoder/gocean
 ```
@@ -20,13 +20,13 @@ go install github.com/webercoder/gocean
 
 ### Get the Nearest Station
 
-```bash
+```txt
 gocean stations [postcode]
 ```
 
 For example:
 
-```bash
+```txt
 $ gocean stations 94087
 The nearest Station is "Redwood City" (ID: 9414523), which is 23.072995 kms away from 94087.
 
@@ -36,58 +36,45 @@ The nearest Station is "San Diego, San Diego Bay" (ID: 9410170), which is 1.1307
 
 ### Get Tide Predictions
 
-```bash
+```txt
 gocean coops predictions [station-id]
 ```
 
 For example:
 
-```bash
+```txt
 $ gocean coops predictions 9410230
 Tide predictions for station: 9410230
-  2021-05-14 22:06	5.111
-  2021-05-14 22:12	5.136
-  2021-05-14 22:18	5.157
+  2021-05-14 22:06    5.111
+  2021-05-14 22:12    5.136
+  2021-05-14 22:18    5.157
 ...
 ```
 
 ### Get Water Levels
 
-```bash
+```txt
 gocean coops water_level [station-id]
 ```
 
 For example:
 
-```bash
+```txt
 $ gocean coops water_level 8454000
 Tide water levels for station: 8454000
-  2021-05-16 16:54	0.635	p
-  2021-05-16 17:00	0.661	p
-  2021-05-16 17:06	0.625	p
-  2021-05-16 17:12	0.523	p
-  2021-05-16 17:18	0.444	p
-  2021-05-16 17:24	0.415	p
-  2021-05-16 17:30	0.421	p
+  2021-05-16 16:54    0.635    p
+  2021-05-16 17:00    0.661    p
+  2021-05-16 17:06    0.625    p
+  2021-05-16 17:12    0.523    p
+  2021-05-16 17:18    0.444    p
+  2021-05-16 17:24    0.415    p
+  2021-05-16 17:30    0.421    p
 ...
 ```
 
-## Development Plan
+## Code Structure
 
 The `src/coops` directory contains libraries for connecting to the [NOAA CO-OPS API](https://api.tidesandcurrents.noaa.gov/api/prod/).
 
 The `src/stations` directory contains libraries for retrieving NOAA oceanic station
 data.
-
-The top-level program has a few convenience functions for querying the API but will
-be expanded in the future to support all NOAA operations.
-
-Planned features:
-
-* Flesh out this list and move it to GitHub issues.
-* Complete query capability for all CO-OPS products (See [the NOAA CO-OPS API docs](https://api.tidesandcurrents.noaa.gov/api/prod/)).
-* Save preferred station(s) to ~/.gocean/ or a similar location for easier command-line usage.
-* Optimize performance of nearest station calculation.
-* Allow querying by any location or postcode directly when using the tides and currents API.
-* Allow the stations listing to be cached locally.
-* Write documentation for the API.
