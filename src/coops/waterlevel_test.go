@@ -1,14 +1,11 @@
-package waterlevel_test
+package coops_test
 
 import (
 	"fmt"
-	"net/http"
 	"strings"
 	"testing"
 
-	"github.com/webercoder/gocean/src/coops/coopsclient"
-	"github.com/webercoder/gocean/src/coops/waterlevel"
-	"github.com/webercoder/gocean/src/lib"
+	"github.com/webercoder/gocean/src/coops"
 )
 
 const NOAAWaterLevelsJSONData = `{
@@ -47,25 +44,10 @@ const NOAAWaterLevelsJSONErrorData = `{
 	}
 }`
 
-type FakeTidesAndCurrentsClient struct {
-	Err      error
-	JsonData string
-}
-
-func (fsc *FakeTidesAndCurrentsClient) Get(url string) (resp *http.Response, err error) {
-	if fsc.Err != nil {
-		return nil, fsc.Err
-	}
-
-	return &http.Response{
-		Body: lib.NewStringReadCloser(fsc.JsonData),
-	}, nil
-}
-
 func TestRetrieve(t *testing.T) {
-	api := &waterlevel.API{
+	api := &coops.WaterLevelAPI{
 		App:    "gocean_test",
-		Client: &coopsclient.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAWaterLevelsJSONData}},
+		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAWaterLevelsJSONData}},
 	}
 	station := "9410170"
 	data, err := api.Retrieve(station, 1)
@@ -90,9 +72,9 @@ func TestRetrieve(t *testing.T) {
 }
 
 func TestRetrieveError(t *testing.T) {
-	api := &waterlevel.API{
+	api := &coops.WaterLevelAPI{
 		App:    "gocean_test",
-		Client: &coopsclient.Client{HTTPClient: &FakeTidesAndCurrentsClient{JsonData: NOAAWaterLevelsJSONErrorData}},
+		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAWaterLevelsJSONErrorData}},
 	}
 	station := "9410170"
 	_, err := api.Retrieve(station, 1)

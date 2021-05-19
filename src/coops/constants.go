@@ -1,4 +1,4 @@
-package coopsclient
+package coops
 
 const (
 	// ResponseFormatJSON represents the JSON format.
