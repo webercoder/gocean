@@ -50,7 +50,10 @@ func TestRetrieve(t *testing.T) {
 		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAWaterLevelsJSONData}},
 	}
 	station := "9410170"
-	data, err := api.Retrieve(station, 1)
+	data, err := api.Retrieve(coops.NewClientRequest(
+		coops.WithStation(station),
+		coops.WithHours(1),
+	))
 	if err != nil {
 		t.Error("Did not expect error when retrieving tide data", err)
 	}
@@ -77,7 +80,10 @@ func TestRetrieveError(t *testing.T) {
 		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAWaterLevelsJSONErrorData}},
 	}
 	station := "9410170"
-	_, err := api.Retrieve(station, 1)
+	_, err := api.Retrieve(coops.NewClientRequest(
+		coops.WithStation(station),
+		coops.WithHours(1),
+	))
 	if err == nil {
 		t.Error("Expected an error when retrieving bad water level data")
 	}

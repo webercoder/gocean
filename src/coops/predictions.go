@@ -30,17 +30,8 @@ func NewPredictionsAPI(app string) *PredictionsAPI {
 }
 
 // Retrieve gets the predictions from the station.
-func (api *PredictionsAPI) Retrieve(
-	station string,
-	hours int,
-) ([]Prediction, error) {
-	jsonData, err := api.Client.GetJSON(
-		NewClientRequest(
-			WithProduct(ProductPredictions),
-			WithStation(station),
-			WithHours(hours),
-		),
-	)
+func (api *PredictionsAPI) Retrieve(req *ClientRequest) ([]Prediction, error) {
+	jsonData, err := api.Client.GetJSON(req)
 	if err != nil {
 		return nil, fmt.Errorf("error reading predictions request body: %v", err)
 	}
@@ -49,6 +40,18 @@ func (api *PredictionsAPI) Retrieve(
 	err = json.Unmarshal(jsonData, &predictions)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing predictions json data: %v", err)
+	}
+
+	if len(predictions.Predictions) == 0 {
+		jsonErrResp := &ClientErrorResponse{}
+		err = json.Unmarshal(jsonData, &jsonErrResp)
+		if err != nil {
+			return nil, fmt.Errorf("error parsing water level json data: %v", err)
+		}
+
+		if jsonErrResp.Err.Message != "" {
+			return nil, fmt.Errorf("received error from API: %s", jsonErrResp.Err.Message)
+		}
 	}
 
 	return predictions.Predictions, nil

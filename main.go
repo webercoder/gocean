@@ -1,23 +1,19 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
 	"github.com/webercoder/gocean/command"
 )
 
-func usage(handlers map[string]command.Handler, msg ...string) {
-	if len(msg) > 0 {
-		for i := 0; i < len(msg); i++ {
-			fmt.Println(msg)
-		}
+func usage(handlers map[string]command.Handler, err ...string) {
+	if len(err) > 0 {
+		fmt.Printf("The following errors occurred: %v\n", err)
 	}
 
-	fmt.Println("Usage:")
-	for _, handler := range handlers {
-		handler.Usage()
+	for key := range handlers {
+		fmt.Printf("  %v\n", key)
 	}
 
 	os.Exit(1)
@@ -30,7 +26,7 @@ func main() {
 	}
 
 	if len(os.Args) < 2 {
-		usage(handlers)
+		usage(handlers, "Please provide a subcommand")
 	}
 
 	command := os.Args[1]
@@ -39,24 +35,23 @@ func main() {
 		usage(handlers, fmt.Sprintf("Command %s is not a valid top-level command", command))
 	}
 
-	var subcommand string
-	if len(os.Args) > 2 {
-		subcommand = os.Args[2]
-	}
+	// var subcommand string
+	// if len(os.Args) > 2 {
+	// 	subcommand = os.Args[2]
+	// }
 
-	fset, err := handler.GetFlagSet(subcommand)
-	if err != nil {
-		handler.Usage(err)
-		os.Exit(1)
-	}
+	// fset, err := handler.GetFlagSet(subcommand)
+	// if err != nil {
+	// 	handler.Usage(err)
+	// }
 
-	if err := fset.Parse(os.Args[1:]); err != nil {
-		handler.Usage(errors.New("unable to parse command-line options"))
-		os.Exit(1)
-	}
+	// if err := fset.Parse(os.Args[1:]); err != nil {
+	// 	handler.Usage(errors.New("unable to parse command-line options"))
+	// }
 
-	err = handler.HandleCommand(subcommand)
+	err := handler.HandleCommand()
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(1)
 	}
 }

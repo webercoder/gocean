@@ -175,9 +175,9 @@ func NewClientRequest(opts ...ClientRequestOption) *ClientRequest {
 // GetURLValues retrieves the settings in this request as a url.Values structure.
 func (r *ClientRequest) GetURLValues() *url.Values {
 	params := &url.Values{}
-	params.Add("begin_date", r.BeginDate.Format("20060102 15:04"))
+	params.Add("begin_date", r.BeginDate.Format(APIDateFormat))
 	params.Add("datum", r.Datum.String())
-	params.Add("end_date", r.EndDate.Format("20060102 15:04"))
+	params.Add("end_date", r.EndDate.Format(APIDateFormat))
 	params.Add("format", r.Format.String())
 	params.Add("product", r.Product.String())
 	params.Add("station", r.Station)
@@ -186,10 +186,23 @@ func (r *ClientRequest) GetURLValues() *url.Values {
 	return params
 }
 
-// WithBeginDate overrides the default being date for the result set.
+// WithBeginDate overrides the default begin date (the current time) for the result set.
 func WithBeginDate(d time.Time) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.BeginDate = d
+	}
+}
+
+// WithBeginDateString parses the dateString of format APIDateFormat and sets the begin
+// date to the result.
+func WithBeginDateString(dateString string) ClientRequestOption {
+	return func(r *ClientRequest) {
+		if dateString != "" {
+			d, err := time.Parse(APIDateFormat, dateString)
+			if err == nil {
+				r.BeginDate = d
+			}
+		}
 	}
 }
 
@@ -204,6 +217,19 @@ func WithDatum(datum Datum) ClientRequestOption {
 func WithEndDate(d time.Time) ClientRequestOption {
 	return func(r *ClientRequest) {
 		r.EndDate = d
+	}
+}
+
+// WithEndDateString parses the dateString of format APIDateFormat and sets the end
+// date to the result.
+func WithEndDateString(dateString string) ClientRequestOption {
+	return func(r *ClientRequest) {
+		if dateString != "" {
+			d, err := time.Parse(APIDateFormat, dateString)
+			if err == nil {
+				r.EndDate = d
+			}
+		}
 	}
 }
 

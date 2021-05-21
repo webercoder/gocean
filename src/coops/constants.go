@@ -11,9 +11,21 @@ const (
 	ResponseFormatCSV
 )
 
+// ResponseFormatStrings contains all the allowed string values in the order of the
+// enumeration above.
+var ResponseFormatStrings = [...]string{"json", "xml", "csv"}
+
 // String returns the response format to a string.
 func (s ResponseFormat) String() string {
-	return [...]string{"json", "xml", "csv"}[s]
+	return ResponseFormatStrings[s]
+}
+
+// StringToResponseFormat converts a string to a ResponseFormat.
+func StringToResponseFormat(s string) (ResponseFormat, bool) {
+	if i, ok := indexOf(ResponseFormatStrings[:], s); ok {
+		return ResponseFormat(i), true
+	}
+	return -1, false
 }
 
 const (
@@ -27,9 +39,21 @@ const (
 	TimeZoneFormatLSTLDT
 )
 
+// TimeZoneFormatStrings contains all the allowed string values in the order of the
+// enumeration above.
+var TimeZoneFormatStrings = [...]string{"gmt", "lst", "lst_ldt"}
+
 // String returns the timezone format to a string.
 func (s TimeZoneFormat) String() string {
-	return [...]string{"gmt", "lst", "lst_ldt"}[s]
+	return TimeZoneFormatStrings[s]
+}
+
+// StringToTimeZoneFormat converts a string to a TimeZoneFormat.
+func StringToTimeZoneFormat(s string) (TimeZoneFormat, bool) {
+	if i, ok := indexOf(TimeZoneFormatStrings[:], s); ok {
+		return TimeZoneFormat(i), true
+	}
+	return -1, false
 }
 
 const (
@@ -40,9 +64,21 @@ const (
 	UnitsMetric
 )
 
+// UnitsStrings contains all the allowed string values in the order of the
+// enumeration above.
+var UnitsStrings = [...]string{"english", "metric"}
+
 // String returns the timezone format to a string.
 func (s Units) String() string {
-	return [...]string{"english", "metric"}[s]
+	return UnitsStrings[s]
+}
+
+// StringToUnits converts a string to a Units.
+func StringToUnits(s string) (Units, bool) {
+	if i, ok := indexOf(UnitsStrings[:], s); ok {
+		return Units(i), true
+	}
+	return -1, false
 }
 
 // Datums! https://tidesandcurrents.noaa.gov/datum_options.html
@@ -81,21 +117,33 @@ const (
 	DatumSTND
 )
 
+// DatumStrings contains all the allowed string values in the order of the
+// enumeration above.
+var DatumStrings = [...]string{
+	"CRD",
+	"IGLD",
+	"LWD",
+	"MHHW",
+	"MHW",
+	"MTL",
+	"MSL",
+	"MLW",
+	"MLLW",
+	"NAVD",
+	"STND",
+}
+
 // String returns the datum's string value.
 func (s Datum) String() string {
-	return [...]string{
-		"CRD",
-		"IGLD",
-		"LWD",
-		"MHHW",
-		"MHW",
-		"MTL",
-		"MSL",
-		"MLW",
-		"MLLW",
-		"NAVD",
-		"STND",
-	}[s]
+	return DatumStrings[s]
+}
+
+// StringToDatum converts a string to a Datum.
+func StringToDatum(s string) (Datum, bool) {
+	if i, ok := indexOf(DatumStrings[:], s); ok {
+		return Datum(i), true
+	}
+	return -1, false
 }
 
 const (
@@ -157,27 +205,48 @@ const (
 	ProductWind
 )
 
+// ProductStrings contains all the allowed string values in the order of the
+// enumeration above.
+var ProductStrings = [...]string{
+	"air_gap",
+	"air_pressure",
+	"air_temperature",
+	"conductivity",
+	"currents",
+	"currents_predictions",
+	"daily_mean",
+	"datums",
+	"high_low",
+	"hourly_height",
+	"humidity",
+	"monthly_mean",
+	"one_minute_waterlevel",
+	"predictions",
+	"salinity",
+	"visibility",
+	"water_level",
+	"water_temperature",
+	"wind",
+}
+
 // String returns the product's string value.
 func (s Product) String() string {
-	return [...]string{
-		"air_gap",
-		"air_pressure",
-		"air_temperature",
-		"conductivity",
-		"currents",
-		"currents_predictions",
-		"daily_mean",
-		"datums",
-		"high_low",
-		"hourly_height",
-		"humidity",
-		"monthly_mean",
-		"one_minute_waterlevel",
-		"predictions",
-		"salinity",
-		"visibility",
-		"water_level",
-		"water_temperature",
-		"wind",
-	}[s]
+	return ProductStrings[s]
+}
+
+// StringToProduct converts a string to a Product.
+func StringToProduct(s string) (Product, bool) {
+	if i, ok := indexOf(ProductStrings[:], s); ok {
+		return Product(i), true
+	}
+	return -1, false
+}
+
+func indexOf(haystack []string, needle string) (int, bool) {
+	for i, v := range haystack {
+		if v == needle {
+			return i, true
+		}
+	}
+	return -1, false
 }

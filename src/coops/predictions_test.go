@@ -31,7 +31,10 @@ func TestPredictionsRetrieve(t *testing.T) {
 		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAPredictionsJSONData}},
 	}
 	station := "9410170"
-	data, err := api.Retrieve(station, 1)
+	data, err := api.Retrieve(coops.NewClientRequest(
+		coops.WithStation(station),
+		coops.WithHours(1),
+	))
 	if err != nil {
 		t.Error("Did not expect error when retrieving tide data", err)
 	}
