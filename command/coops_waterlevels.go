@@ -5,42 +5,62 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/webercoder/gocean/src/coops"
 )
 
 // WaterLevelsCommandHandler handles water levels commands.
 type WaterLevelsCommandHandler struct {
-	flagSet *flag.FlagSet
-	predAPI *coops.WaterLevelAPI
+	clientConfig  *CoopsClientConfig
+	flagSet       *flag.FlagSet
+	waterLevelAPI *coops.WaterLevelAPI
 }
 
 // NewWaterLevelsCommandHandler creates a new Tides and Currents CommandHandler.
 func NewWaterLevelsCommandHandler() *WaterLevelsCommandHandler {
+	clientConfig := NewCoopsClientConfig()
 	return &WaterLevelsCommandHandler{
-		flagSet: flag.NewFlagSet("coops", flag.ExitOnError),
-		predAPI: coops.NewWaterLevelAPI("gocean"),
+		clientConfig:  clientConfig,
+		flagSet:       clientConfig.GetFlagSet("waterlevel", flag.ExitOnError),
+		waterLevelAPI: coops.NewWaterLevelAPI("gocean"),
 	}
-}
-
-// GetFlagSet returns this command's flagSet for parsing command-line options.
-func (wlch *WaterLevelsCommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
-	return wlch.flagSet, nil
 }
 
 // HandleCommand .
-func (wlch *WaterLevelsCommandHandler) HandleCommand(command string) error {
-	station := wlch.flagSet.Arg(2)
-	if len(station) == 0 {
-		wlch.Usage(errors.New("station is required"))
-		os.Exit(1)
+func (wlch *WaterLevelsCommandHandler) HandleCommand() error {
+	if err := wlch.flagSet.Parse(os.Args[3:]); err != nil {
+		wlch.Usage(errors.New("unable to parse command-line options"))
 	}
 
-	results, err := wlch.predAPI.Retrieve(station, 24)
+	if wlch.clientConfig.Station == "" {
+		wlch.Usage(errors.New("station is required"))
+	}
+
+	if wlch.clientConfig.BeginDate == "" && wlch.clientConfig.EndDate == "" {
+		wlch.clientConfig.BeginDate = time.Now().Add(-1 * 24 * time.Hour).Format(coops.APIDateFormat)
+	}
+
+	reqOptions, err := wlch.clientConfig.ToRequestOptions()
+	if err != nil {
+		wlch.Usage(err)
+	}
+	req := coops.NewClientRequest(
+		append(
+			reqOptions,
+			coops.WithFormat(coops.ResponseFormatJSON),
+			coops.WithProduct(coops.ProductWaterLevel),
+		)...,
+	)
+
+	results, err := wlch.waterLevelAPI.Retrieve(req)
 	if err != nil {
 		return fmt.Errorf("could not load water levels for station: %v", err)
 	}
-	wlch.predAPI.PrintTabDelimited(station, results)
+	if wlch.clientConfig.Count > 0 {
+		results = results[:wlch.clientConfig.Count]
+	}
+	wlch.waterLevelAPI.PrintTabDelimited(wlch.clientConfig.Station, results)
 	return nil
 }
 
@@ -48,8 +68,8 @@ func (wlch *WaterLevelsCommandHandler) HandleCommand(command string) error {
 func (wlch *WaterLevelsCommandHandler) Usage(err ...error) {
 	if len(err) > 0 {
 		fmt.Printf("The following errors occurred: %v\n", err)
-		fmt.Println("Usage:")
 	}
 
-	fmt.Println("waterlevels station-id")
+	wlch.flagSet.Usage()
+	os.Exit(1)
 }

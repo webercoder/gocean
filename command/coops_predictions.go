@@ -5,42 +5,62 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/webercoder/gocean/src/coops"
 )
 
 // PredictionsCommandHandler handles predictions commands.
 type PredictionsCommandHandler struct {
-	flagSet *flag.FlagSet
-	predAPI *coops.PredictionsAPI
+	clientConfig *CoopsClientConfig
+	flagSet      *flag.FlagSet
+	predAPI      *coops.PredictionsAPI
 }
 
 // NewPredictionsCommandHandler creates a new Tides and Currents CommandHandler
 func NewPredictionsCommandHandler() *PredictionsCommandHandler {
+	clientConfig := NewCoopsClientConfig()
 	return &PredictionsCommandHandler{
-		flagSet: flag.NewFlagSet("coops", flag.ExitOnError),
-		predAPI: coops.NewPredictionsAPI("gocean"),
+		clientConfig: clientConfig,
+		flagSet:      clientConfig.GetFlagSet("predictions", flag.ExitOnError),
+		predAPI:      coops.NewPredictionsAPI("gocean"),
 	}
-}
-
-// GetFlagSet returns this command's flagSet for parsing command-line options.
-func (pch *PredictionsCommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
-	return pch.flagSet, nil
 }
 
 // HandleCommand processes the predictions command.
-func (pch *PredictionsCommandHandler) HandleCommand(command string) error {
-	station := pch.flagSet.Arg(2)
-	if len(station) == 0 {
-		pch.Usage(errors.New("station is required"))
-		os.Exit(1)
+func (pch *PredictionsCommandHandler) HandleCommand() error {
+	if err := pch.flagSet.Parse(os.Args[3:]); err != nil {
+		pch.Usage(errors.New("unable to parse command-line options"))
 	}
 
-	results, err := pch.predAPI.Retrieve(station, 24)
-	if err != nil {
-		return fmt.Errorf("could not load predictions for station")
+	if pch.clientConfig.Station == "" {
+		pch.Usage(errors.New("station is required"))
 	}
-	pch.predAPI.PrintTabDelimited(station, results)
+
+	if pch.clientConfig.BeginDate == "" && pch.clientConfig.EndDate == "" {
+		pch.clientConfig.BeginDate = time.Now().Format(coops.APIDateFormat)
+	}
+
+	reqOptions, err := pch.clientConfig.ToRequestOptions()
+	if err != nil {
+		pch.Usage(err)
+	}
+	req := coops.NewClientRequest(
+		append(
+			reqOptions,
+			coops.WithFormat(coops.ResponseFormatJSON),
+			coops.WithProduct(coops.ProductPredictions),
+		)...,
+	)
+
+	results, err := pch.predAPI.Retrieve(req)
+	if err != nil {
+		return fmt.Errorf("could not load predictions for station: %v", err)
+	}
+	if pch.clientConfig.Count > 0 {
+		results = results[:pch.clientConfig.Count]
+	}
+	pch.predAPI.PrintTabDelimited(pch.clientConfig.Station, results)
 	return nil
 }
 
@@ -48,8 +68,8 @@ func (pch *PredictionsCommandHandler) HandleCommand(command string) error {
 func (pch *PredictionsCommandHandler) Usage(err ...error) {
 	if len(err) > 0 {
 		fmt.Printf("The following errors occurred: %v\n", err)
-		fmt.Println("Usage:")
 	}
 
-	fmt.Println("predictions station-id")
+	pch.flagSet.Usage()
+	os.Exit(1)
 }

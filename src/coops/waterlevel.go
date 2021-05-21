@@ -31,17 +31,8 @@ func NewWaterLevelAPI(app string) *WaterLevelAPI {
 }
 
 // Retrieve gets the WaterLevels from the station.
-func (api *WaterLevelAPI) Retrieve(
-	station string,
-	hours int,
-) ([]WaterLevel, error) {
-	jsonData, err := api.Client.GetJSON(
-		NewClientRequest(
-			WithProduct(ProductWaterLevel),
-			WithStation(station),
-			WithHours(hours),
-		),
-	)
+func (api *WaterLevelAPI) Retrieve(req *ClientRequest) ([]WaterLevel, error) {
+	jsonData, err := api.Client.GetJSON(req)
 	if err != nil {
 		return nil, fmt.Errorf("error reading water level request body: %v", err)
 	}

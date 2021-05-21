@@ -12,34 +12,35 @@ import (
 
 // StationsCommandHandler handles stations commands.
 type StationsCommandHandler struct {
-	flagSet *flag.FlagSet
+	flagSet  *flag.FlagSet
+	postcode string
 }
 
 // NewStationsCommandHandler creates a new Stations CommandHandler.
 func NewStationsCommandHandler() *StationsCommandHandler {
-	return &StationsCommandHandler{
+	handler := &StationsCommandHandler{
 		flagSet: flag.NewFlagSet("stations", flag.ExitOnError),
 	}
-}
-
-// GetFlagSet returns this command's flagSet for parsing command-line options.
-func (sch *StationsCommandHandler) GetFlagSet(command string) (*flag.FlagSet, error) {
-	return sch.flagSet, nil
+	handler.flagSet.StringVar(&handler.postcode, "postcode", "", "Find stations near this postcode")
+	return handler
 }
 
 // HandleCommand handles the stations command.
-func (sch *StationsCommandHandler) HandleCommand(command string) error {
-	postcode := sch.flagSet.Arg(1)
-	if len(postcode) == 0 {
+func (sch *StationsCommandHandler) HandleCommand() error {
+	if err := sch.flagSet.Parse(os.Args[2:]); err != nil {
+		sch.Usage(errors.New("unable to parse command-line options"))
+	}
+
+	if len(sch.postcode) == 0 {
 		sch.Usage(errors.New("postcode is required"))
 		os.Exit(1)
 	}
 
-	fmt.Println("Finding nearest station to", postcode)
+	fmt.Println("Finding nearest station to", sch.postcode)
 
-	coords, err := lib.FindCoordsForPostcode(postcode)
+	coords, err := lib.FindCoordsForPostcode(sch.postcode)
 	if err != nil {
-		return fmt.Errorf("could not find coordinates for the provided location %s", postcode)
+		return fmt.Errorf("could not find coordinates for the provided location %s", sch.postcode)
 	}
 
 	stationsClient := stations.NewClient()
@@ -49,7 +50,7 @@ func (sch *StationsCommandHandler) HandleCommand(command string) error {
 		result.Station.Name,
 		result.Station.ID,
 		result.Distance,
-		postcode,
+		sch.postcode,
 	)
 
 	return nil
@@ -59,8 +60,8 @@ func (sch *StationsCommandHandler) HandleCommand(command string) error {
 func (sch *StationsCommandHandler) Usage(err ...error) {
 	if len(err) > 0 {
 		fmt.Printf("The following errors occurred: %v\n", err)
-		fmt.Println("Usage:")
 	}
 
-	fmt.Println("stations postcode")
+	sch.flagSet.Usage()
+	os.Exit(1)
 }
