@@ -22,7 +22,7 @@ func NewPredictionsCommandHandler() *PredictionsCommandHandler {
 	clientConfig := NewCoopsClientConfig()
 	return &PredictionsCommandHandler{
 		clientConfig: clientConfig,
-		flagSet:      clientConfig.GetFlagSet("predictions", flag.ExitOnError),
+		flagSet:      clientConfig.GetFlagSet(coops.ProductPredictions.String(), flag.ExitOnError),
 		predAPI:      coops.NewPredictionsAPI("gocean"),
 	}
 }

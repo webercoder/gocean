@@ -57,21 +57,23 @@ Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Co
 
 ```txt
 -begin-date string
-    The begin date for the data set
+    The begin date for the data set.
 -count int
-    The number of results to display (default -1)
+    The number of results to display. Only works with the pretty format. (default -1)
 -datum string
-    The datum to query (default "MLLW")
+    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
 -end-date string
-    The end date for the data set
+    The end date for the data set.
+-format string
+    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
 -hours int
-    The offset from the start time (default 24)
+    The offset from the start time. (default 24)
 -station string
-    The station to query
+    The station to query.
 -time-zone-format string
-    The time zone format (default "lst_ldt")
+    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
 -units string
-    Either english or metric (default "english")
+    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:
@@ -96,21 +98,23 @@ Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Co
 
 ```txt
 -begin-date string
-    The begin date for the data set
+    The begin date for the data set.
 -count int
-    The number of results to display (default -1)
+    The number of results to display. Only works with the pretty format. (default -1)
 -datum string
-    The datum to query (default "MLLW")
+    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
 -end-date string
-    The end date for the data set
+    The end date for the data set.
+-format string
+    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
 -hours int
-    The offset from the start time (default 24)
+    The offset from the start time. (default 24)
 -station string
-    The station to query
+    The station to query.
 -time-zone-format string
-    The time zone format (default "lst_ldt")
+    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
 -units string
-    Either english or metric (default "english")
+    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:

@@ -2,11 +2,25 @@
 
 echo "\nRuning revive linter..."
 revive --formatter friendly ./...
+status=$?
+if [[ "$status" -ne "0" ]]; then
+	exit $status
+fi
 
 echo "Building..."
 go build
+status=$?
+if [[ "$status" -ne "0" ]]; then
+	exit $status
+fi
 
 echo "Running tests ..."
+go clean -testcache
 go test ./...
+status=$?
+if [[ "$status" -ne "0" ]]; then
+	exit $status
+fi
 
 echo "pre-commit complete.\n"
+

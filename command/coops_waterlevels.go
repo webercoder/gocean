@@ -22,7 +22,7 @@ func NewWaterLevelsCommandHandler() *WaterLevelsCommandHandler {
 	clientConfig := NewCoopsClientConfig()
 	return &WaterLevelsCommandHandler{
 		clientConfig:  clientConfig,
-		flagSet:       clientConfig.GetFlagSet("waterlevel", flag.ExitOnError),
+		flagSet:       clientConfig.GetFlagSet(coops.ProductWaterLevel.String(), flag.ExitOnError),
 		waterLevelAPI: coops.NewWaterLevelAPI("gocean"),
 	}
 }

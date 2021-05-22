@@ -78,7 +78,7 @@ func NewCoopsClientConfig() *CoopsClientConfig {
 
 // GetFlagSet returns a generic flag set for CO-OPS API usage.
 func (ccc *CoopsClientConfig) GetFlagSet(name string, errorHandling flag.ErrorHandling) *flag.FlagSet {
-	fset := flag.NewFlagSet("predictions", errorHandling)
+	fset := flag.NewFlagSet(name, errorHandling)
 	fset.StringVar(&ccc.BeginDate, "begin-date", "", "The begin date for the data set.")
 	fset.StringVar(
 		&ccc.Datum,
