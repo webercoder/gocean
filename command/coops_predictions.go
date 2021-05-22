@@ -29,6 +29,19 @@ func NewPredictionsCommandHandler() *PredictionsCommandHandler {
 
 // HandleCommand processes the predictions command.
 func (pch *PredictionsCommandHandler) HandleCommand() error {
+	pch.validate()
+
+	req := coops.NewClientRequest(pch.getRequestOptions()...)
+
+	if pch.clientConfig.Format == ResponseFormatPrettyPrint {
+		return pch.handlePrettyPrint(req)
+	}
+
+	return pch.handleRawPrint(req)
+
+}
+
+func (pch *PredictionsCommandHandler) validate() {
 	if err := pch.flagSet.Parse(os.Args[3:]); err != nil {
 		pch.Usage(errors.New("unable to parse command-line options"))
 	}
@@ -40,27 +53,38 @@ func (pch *PredictionsCommandHandler) HandleCommand() error {
 	if pch.clientConfig.BeginDate == "" && pch.clientConfig.EndDate == "" {
 		pch.clientConfig.BeginDate = time.Now().Format(coops.APIDateFormat)
 	}
+}
 
+func (pch *PredictionsCommandHandler) getRequestOptions() []coops.ClientRequestOption {
 	reqOptions, err := pch.clientConfig.ToRequestOptions()
 	if err != nil {
 		pch.Usage(err)
 	}
-	req := coops.NewClientRequest(
-		append(
-			reqOptions,
-			coops.WithFormat(coops.ResponseFormatJSON),
-			coops.WithProduct(coops.ProductPredictions),
-		)...,
-	)
 
-	results, err := pch.predAPI.Retrieve(req)
+	return append(reqOptions, coops.WithProduct(coops.ProductPredictions))
+}
+
+func (pch *PredictionsCommandHandler) handlePrettyPrint(req *coops.ClientRequest) error {
+	results, err := pch.predAPI.GetPredictions(req)
 	if err != nil {
 		return fmt.Errorf("could not load predictions for station: %v", err)
 	}
+
 	if pch.clientConfig.Count > 0 {
 		results = results[:pch.clientConfig.Count]
 	}
+
 	pch.predAPI.PrintTabDelimited(pch.clientConfig.Station, results)
+	return nil
+}
+
+func (pch *PredictionsCommandHandler) handleRawPrint(req *coops.ClientRequest) error {
+	resp, err := pch.predAPI.Client.Get(req)
+	if err != nil {
+		return fmt.Errorf("could not retrieve predictions data: %v", err)
+	}
+
+	fmt.Println(string(resp))
 	return nil
 }
 

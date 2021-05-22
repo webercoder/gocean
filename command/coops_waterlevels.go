@@ -29,6 +29,18 @@ func NewWaterLevelsCommandHandler() *WaterLevelsCommandHandler {
 
 // HandleCommand .
 func (wlch *WaterLevelsCommandHandler) HandleCommand() error {
+	wlch.validate()
+
+	req := coops.NewClientRequest(wlch.getRequestOptions()...)
+
+	if wlch.clientConfig.Format == ResponseFormatPrettyPrint {
+		return wlch.handlePrettyPrint(req)
+	}
+
+	return wlch.handleRawPrint(req)
+}
+
+func (wlch *WaterLevelsCommandHandler) validate() {
 	if err := wlch.flagSet.Parse(os.Args[3:]); err != nil {
 		wlch.Usage(errors.New("unable to parse command-line options"))
 	}
@@ -40,27 +52,38 @@ func (wlch *WaterLevelsCommandHandler) HandleCommand() error {
 	if wlch.clientConfig.BeginDate == "" && wlch.clientConfig.EndDate == "" {
 		wlch.clientConfig.BeginDate = time.Now().Add(-1 * 24 * time.Hour).Format(coops.APIDateFormat)
 	}
+}
 
+func (wlch *WaterLevelsCommandHandler) getRequestOptions() []coops.ClientRequestOption {
 	reqOptions, err := wlch.clientConfig.ToRequestOptions()
 	if err != nil {
 		wlch.Usage(err)
 	}
-	req := coops.NewClientRequest(
-		append(
-			reqOptions,
-			coops.WithFormat(coops.ResponseFormatJSON),
-			coops.WithProduct(coops.ProductWaterLevel),
-		)...,
-	)
 
-	results, err := wlch.waterLevelAPI.Retrieve(req)
+	return append(reqOptions, coops.WithProduct(coops.ProductWaterLevel))
+}
+
+func (wlch *WaterLevelsCommandHandler) handlePrettyPrint(req *coops.ClientRequest) error {
+	results, err := wlch.waterLevelAPI.GetWaterLevels(req)
 	if err != nil {
 		return fmt.Errorf("could not load water levels for station: %v", err)
 	}
+
 	if wlch.clientConfig.Count > 0 {
 		results = results[:wlch.clientConfig.Count]
 	}
+
 	wlch.waterLevelAPI.PrintTabDelimited(wlch.clientConfig.Station, results)
+	return nil
+}
+
+func (wlch *WaterLevelsCommandHandler) handleRawPrint(req *coops.ClientRequest) error {
+	resp, err := wlch.waterLevelAPI.Client.Get(req)
+	if err != nil {
+		return fmt.Errorf("could not retrieve water_level data: %v", err)
+	}
+
+	fmt.Println(string(resp))
 	return nil
 }
 

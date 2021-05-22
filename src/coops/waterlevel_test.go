@@ -50,7 +50,7 @@ func TestRetrieve(t *testing.T) {
 		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAWaterLevelsJSONData}},
 	}
 	station := "9410170"
-	data, err := api.Retrieve(coops.NewClientRequest(
+	data, err := api.GetWaterLevels(coops.NewClientRequest(
 		coops.WithStation(station),
 		coops.WithHours(1),
 	))
@@ -80,7 +80,7 @@ func TestRetrieveError(t *testing.T) {
 		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAWaterLevelsJSONErrorData}},
 	}
 	station := "9410170"
-	_, err := api.Retrieve(coops.NewClientRequest(
+	_, err := api.GetWaterLevels(coops.NewClientRequest(
 		coops.WithStation(station),
 		coops.WithHours(1),
 	))

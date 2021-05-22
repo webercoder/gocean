@@ -29,28 +29,27 @@ func NewPredictionsAPI(app string) *PredictionsAPI {
 	}
 }
 
-// Retrieve gets the predictions from the station.
-func (api *PredictionsAPI) Retrieve(req *ClientRequest) ([]Prediction, error) {
-	jsonData, err := api.Client.GetJSON(req)
+// GetPredictions gets the predictions from the station.
+func (api *PredictionsAPI) GetPredictions(req *ClientRequest) ([]Prediction, error) {
+	data, err := api.Client.Get(req)
 	if err != nil {
 		return nil, fmt.Errorf("error reading predictions request body: %v", err)
 	}
-
 	predictions := &PredictionsResult{}
-	err = json.Unmarshal(jsonData, &predictions)
+	err = json.Unmarshal(data, &predictions)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing predictions json data: %v", err)
+		return nil, fmt.Errorf("error parsing predictions data: %v", err)
 	}
 
 	if len(predictions.Predictions) == 0 {
-		jsonErrResp := &ClientErrorResponse{}
-		err = json.Unmarshal(jsonData, &jsonErrResp)
+		errResp := &ClientErrorResponse{}
+		err = json.Unmarshal(data, &errResp)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing water level json data: %v", err)
+			return nil, fmt.Errorf("error parsing water level data: %v", err)
 		}
 
-		if jsonErrResp.Err.Message != "" {
-			return nil, fmt.Errorf("received error from API: %s", jsonErrResp.Err.Message)
+		if errResp.Err.Message != "" {
+			return nil, fmt.Errorf("received error from API: %s", errResp.Err.Message)
 		}
 	}
 
