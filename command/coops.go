@@ -9,17 +9,20 @@ import (
 	"github.com/webercoder/gocean/src/coops"
 )
 
+// ResponseFormatPrettyPrint is the command-line option to pretty print results.
+const ResponseFormatPrettyPrint = "pretty"
+
 // COOPSCommandHandler is a composite of all the CO-OPS command-line commands.
 type COOPSCommandHandler struct {
-	subHandlers map[string]Handler
+	subHandlers map[coops.Product]Handler
 }
 
 // NewCOOPSCommandHandler creates a new Tides and Currents CommandHandler.
 func NewCOOPSCommandHandler() *COOPSCommandHandler {
 	return &COOPSCommandHandler{
-		subHandlers: map[string]Handler{
-			"predictions": NewPredictionsCommandHandler(),
-			"water_level": NewWaterLevelsCommandHandler(),
+		subHandlers: map[coops.Product]Handler{
+			coops.ProductPredictions: NewPredictionsCommandHandler(),
+			coops.ProductWaterLevel:  NewWaterLevelsCommandHandler(),
 		},
 	}
 }
@@ -29,7 +32,10 @@ func (cch *COOPSCommandHandler) HandleCommand() error {
 	if len(os.Args) < 3 {
 		cch.Usage(errors.New("please provide a subcommand"))
 	}
-	command := os.Args[2]
+	command, ok := coops.StringToProduct(os.Args[2])
+	if !ok {
+		cch.Usage(fmt.Errorf("unknown product: %s", command))
+	}
 
 	handler, ok := cch.subHandlers[command]
 	if !ok {
@@ -58,6 +64,7 @@ type CoopsClientConfig struct {
 	Count          int
 	Datum          string
 	EndDate        string
+	Format         string
 	Hours          int
 	Station        string
 	TimeZoneFormat string
@@ -72,14 +79,38 @@ func NewCoopsClientConfig() *CoopsClientConfig {
 // GetFlagSet returns a generic flag set for CO-OPS API usage.
 func (ccc *CoopsClientConfig) GetFlagSet(name string, errorHandling flag.ErrorHandling) *flag.FlagSet {
 	fset := flag.NewFlagSet("predictions", errorHandling)
-	fset.StringVar(&ccc.BeginDate, "begin-date", "", "The begin date for the data set")
-	fset.StringVar(&ccc.Datum, "datum", coops.DatumMLLW.String(), "The datum to query")
-	fset.StringVar(&ccc.EndDate, "end-date", "", "The end date for the data set")
-	fset.StringVar(&ccc.Station, "station", "", "The station to query")
-	fset.StringVar(&ccc.TimeZoneFormat, "time-zone-format", coops.TimeZoneFormatLSTLDT.String(), "The time zone format")
-	fset.StringVar(&ccc.Units, "units", coops.UnitsEnglish.String(), "Either english or metric")
-	fset.IntVar(&ccc.Hours, "hours", 24, "The offset from the start time")
-	fset.IntVar(&ccc.Count, "count", -1, "The number of results to display")
+	fset.StringVar(&ccc.BeginDate, "begin-date", "", "The begin date for the data set.")
+	fset.StringVar(
+		&ccc.Datum,
+		"datum",
+		coops.DatumMLLW.String(),
+		fmt.Sprintf("The datum to query. Possible values: %v", coops.DatumStrings),
+	)
+	fset.StringVar(&ccc.EndDate, "end-date", "", "The end date for the data set.")
+	fset.StringVar(
+		&ccc.Format,
+		"format",
+		ResponseFormatPrettyPrint,
+		fmt.Sprintf(
+			"The output format of the results. Possible values: %v",
+			append(coops.ResponseFormatStrings[:], ResponseFormatPrettyPrint),
+		),
+	)
+	fset.StringVar(&ccc.Station, "station", "", "The station to query.")
+	fset.StringVar(
+		&ccc.TimeZoneFormat,
+		"time-zone-format",
+		coops.TimeZoneFormatLSTLDT.String(),
+		fmt.Sprintf("The time zone format. Possible values: %v", coops.TimeZoneFormatStrings),
+	)
+	fset.StringVar(
+		&ccc.Units,
+		"units",
+		coops.UnitsEnglish.String(),
+		fmt.Sprintf("Either english or metric. Possible values: %v", coops.UnitsStrings),
+	)
+	fset.IntVar(&ccc.Hours, "hours", 24, "The offset from the start time.")
+	fset.IntVar(&ccc.Count, "count", -1, "The number of results to display. Only works with the pretty format.")
 	return fset
 }
 
@@ -101,10 +132,18 @@ func (ccc *CoopsClientConfig) ToRequestOptions() ([]coops.ClientRequestOption, e
 		return nil, errors.New("units param is invalid")
 	}
 
+	format, ok := coops.StringToResponseFormat(ccc.Format)
+	if !ok && ccc.Format == ResponseFormatPrettyPrint {
+		format = coops.ResponseFormatJSON
+	} else if !ok {
+		return nil, errors.New("response format is invalid")
+	}
+
 	return []coops.ClientRequestOption{
 		coops.WithBeginDateString(ccc.BeginDate),
 		coops.WithDatum(datum),
 		coops.WithEndDateString(ccc.EndDate),
+		coops.WithFormat(format),
 		coops.WithStation(ccc.Station),
 		coops.WithTimeZoneFormat(tzformat),
 		coops.WithUnits(units),

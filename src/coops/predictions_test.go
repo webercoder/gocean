@@ -31,7 +31,7 @@ func TestPredictionsRetrieve(t *testing.T) {
 		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAPredictionsJSONData}},
 	}
 	station := "9410170"
-	data, err := api.Retrieve(coops.NewClientRequest(
+	data, err := api.GetPredictions(coops.NewClientRequest(
 		coops.WithStation(station),
 		coops.WithHours(1),
 	))

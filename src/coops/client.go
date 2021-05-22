@@ -89,7 +89,7 @@ func NewClient(application string, opts ...ClientOption) *Client {
 // https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=9410170&
 // product=predictions&units=metric&time_zone=lst_ldt&application=gocean&format=json&
 // datum=STND&begin_date=20210119&end_date=20210121
-func (c *Client) Get(r *ClientRequest) (*http.Response, error) {
+func (c *Client) Get(r *ClientRequest) ([]byte, error) {
 	baseURL, err := url.Parse(c.URL)
 	if err != nil {
 		fmt.Println("Unable to parse API URL", err)
@@ -100,12 +100,7 @@ func (c *Client) Get(r *ClientRequest) (*http.Response, error) {
 	params.Add("application", c.Application)
 	baseURL.RawQuery = params.Encode()
 
-	return c.HTTPClient.Get(baseURL.String())
-}
-
-// GetJSON queries the CO-OPS API for a given request and returns JSON data as a byte slice.
-func (c *Client) GetJSON(r *ClientRequest) ([]byte, error) {
-	resp, err := c.Get(r)
+	resp, err := c.HTTPClient.Get(baseURL.String())
 	if err != nil {
 		return nil, fmt.Errorf("error retrieving data: %v", err)
 	}
@@ -114,13 +109,13 @@ func (c *Client) GetJSON(r *ClientRequest) ([]byte, error) {
 		defer resp.Body.Close()
 	}
 
-	jsonData, err := ioutil.ReadAll(resp.Body)
+	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error reading predictions request body", err)
 		return nil, err
 	}
 
-	return jsonData, nil
+	return data, nil
 }
 
 // WithURL overrides the default API URL for this client.

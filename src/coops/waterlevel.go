@@ -2,6 +2,7 @@ package coops
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 )
 
@@ -13,14 +14,16 @@ type WaterLevelAPI struct {
 
 // WaterLevelResult is a deserialized water level response.
 type WaterLevelResult struct {
-	WaterLevels []WaterLevel `json:"data"`
+	XMLName     xml.Name     `xml:"data"`
+	WaterLevels []WaterLevel `xml:"observations" json:"data"`
 }
 
 // WaterLevel is a singular, deserialized water level.
 type WaterLevel struct {
-	Time    string `json:"t"`
-	Value   string `json:"v"`
-	Quality string `json:"q"`
+	XMLName xml.Name `xml:"wl"`
+	Time    string   `xml:"t,attr" json:"t"`
+	Value   string   `xml:"v,attr" json:"v"`
+	Quality string   `xml:"q,attr" json:"q"`
 }
 
 // NewWaterLevelAPI creates a new water level API client.
@@ -30,9 +33,13 @@ func NewWaterLevelAPI(app string) *WaterLevelAPI {
 	}
 }
 
-// Retrieve gets the WaterLevels from the station.
-func (api *WaterLevelAPI) Retrieve(req *ClientRequest) ([]WaterLevel, error) {
-	jsonData, err := api.Client.GetJSON(req)
+// GetWaterLevels gets the WaterLevels from the station.
+func (api *WaterLevelAPI) GetWaterLevels(req *ClientRequest) ([]WaterLevel, error) {
+	if req.Format != ResponseFormatJSON {
+		req.Format = ResponseFormatJSON
+	}
+
+	jsonData, err := api.Client.Get(req)
 	if err != nil {
 		return nil, fmt.Errorf("error reading water level request body: %v", err)
 	}
