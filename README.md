@@ -47,6 +47,47 @@ Finding nearest station to 92101
 The nearest Station is "San Diego, San Diego Bay" (ID: 9410170), which is 1.130777 kms away from 92101.
 ```
 
+### Get Air Temperatures
+
+```txt
+gocean coops air_temperature
+```
+
+Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
+
+```txt
+-begin-date string
+    The begin date for the data set.
+-count int
+    The number of results to display. Only works with the pretty format. (default -1)
+-datum string
+    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
+-end-date string
+    The end date for the data set.
+-format string
+    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
+-hours int
+    The offset from the start time. (default 24)
+-station string
+    The station to query.
+-time-zone-format string
+    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
+-units string
+    Either english or metric. Possible values: [english metric] (default "english")
+```
+
+Example:
+
+```txt
+$ gocean coops air_temperature --station 9410230 --count 5
+Air temperatures for station: 9410230
+  2021-05-22 10:30  57.9
+  2021-05-22 10:36  58.5
+  2021-05-22 10:42  57.7
+  2021-05-22 10:48  57.9
+  2021-05-22 10:54  57.7
+```
+
 ### Get Tide Predictions
 
 ```txt

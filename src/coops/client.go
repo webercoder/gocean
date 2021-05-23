@@ -111,7 +111,7 @@ func (c *Client) Get(r *ClientRequest) ([]byte, error) {
 
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Error reading predictions request body", err)
+		fmt.Println("Error reading request body", err)
 		return nil, err
 	}
 

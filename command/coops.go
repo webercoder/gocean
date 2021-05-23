@@ -21,8 +21,9 @@ type COOPSCommandHandler struct {
 func NewCOOPSCommandHandler() *COOPSCommandHandler {
 	return &COOPSCommandHandler{
 		subHandlers: map[coops.Product]Handler{
-			coops.ProductPredictions: NewPredictionsCommandHandler(),
-			coops.ProductWaterLevel:  NewWaterLevelsCommandHandler(),
+			coops.ProductAirTemperature: NewAirTemperatureCommandHandler(),
+			coops.ProductPredictions:    NewPredictionsCommandHandler(),
+			coops.ProductWaterLevel:     NewWaterLevelsCommandHandler(),
 		},
 	}
 }
