@@ -170,6 +170,47 @@ Tide water levels for station: 9410230
   2021-05-20 07:48  2.376  Preliminary
 ```
 
+### Get Water Temperatures
+
+```txt
+gocean coops water_temperature
+```
+
+Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
+
+```txt
+-begin-date string
+    The begin date for the data set.
+-count int
+    The number of results to display. Only works with the pretty format. (default -1)
+-datum string
+    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
+-end-date string
+    The end date for the data set.
+-format string
+    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
+-hours int
+    The offset from the start time. (default 24)
+-station string
+    The station to query.
+-time-zone-format string
+    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
+-units string
+    Either english or metric. Possible values: [english metric] (default "english")
+```
+
+Example:
+
+```txt
+$ gocean coops water_temperature --station 9410230 --count 5
+Water temperatures for station: 9410230
+  2021-05-28 07:54  66.7
+  2021-05-28 08:00  66.7
+  2021-05-28 08:06  66.7
+  2021-05-28 08:12  66.7
+  2021-05-28 08:18  66.7
+```
+
 ## Code Structure
 
 Directory | Description
