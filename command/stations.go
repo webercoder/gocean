@@ -27,9 +27,7 @@ func NewStationsCommandHandler() *StationsCommandHandler {
 
 // HandleCommand handles the stations command.
 func (sch *StationsCommandHandler) HandleCommand() error {
-	if err := sch.flagSet.Parse(os.Args[2:]); err != nil {
-		sch.Usage(errors.New("unable to parse command-line options"))
-	}
+	sch.ParseFlags()
 
 	if len(sch.postcode) == 0 {
 		sch.Usage(errors.New("postcode is required"))
@@ -54,6 +52,13 @@ func (sch *StationsCommandHandler) HandleCommand() error {
 	)
 
 	return nil
+}
+
+// ParseFlags parses command-line options.
+func (sch *StationsCommandHandler) ParseFlags() {
+	if err := sch.flagSet.Parse(os.Args[2:]); err != nil {
+		sch.Usage(errors.New("unable to parse command-line options"))
+	}
 }
 
 // Usage prints how to use this command.

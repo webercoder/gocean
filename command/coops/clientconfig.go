@@ -1,10 +1,9 @@
-package command
+package coops
 
 import (
 	"errors"
 	"flag"
 	"fmt"
-	"os"
 
 	"github.com/webercoder/gocean/src/coops"
 )
@@ -12,56 +11,8 @@ import (
 // ResponseFormatPrettyPrint is the command-line option to pretty print results.
 const ResponseFormatPrettyPrint = "pretty"
 
-// COOPSCommandHandler is a composite of all the CO-OPS command-line commands.
-type COOPSCommandHandler struct {
-	subHandlers map[coops.Product]Handler
-}
-
-// NewCOOPSCommandHandler creates a new Tides and Currents CommandHandler.
-func NewCOOPSCommandHandler() *COOPSCommandHandler {
-	return &COOPSCommandHandler{
-		subHandlers: map[coops.Product]Handler{
-			coops.ProductAirTemperature:   NewAirTemperatureCommandHandler(),
-			coops.ProductPredictions:      NewPredictionsCommandHandler(),
-			coops.ProductWaterLevel:       NewWaterLevelsCommandHandler(),
-			coops.ProductWaterTemperature: NewWaterTemperatureCommandHandler(),
-		},
-	}
-}
-
-// HandleCommand calls the appropriate subcommand.
-func (cch *COOPSCommandHandler) HandleCommand() error {
-	if len(os.Args) < 3 {
-		cch.Usage(errors.New("please provide a subcommand"))
-	}
-	command, ok := coops.StringToProduct(os.Args[2])
-	if !ok {
-		cch.Usage(fmt.Errorf("unknown product: %s", command))
-	}
-
-	handler, ok := cch.subHandlers[command]
-	if !ok {
-		cch.Usage(fmt.Errorf("subcommand %s is not supported", command))
-	}
-
-	return handler.HandleCommand()
-}
-
-// Usage prints the usage for all subcommands of this command.
-func (cch *COOPSCommandHandler) Usage(err ...error) {
-	if len(err) > 0 {
-		fmt.Printf("The following errors occurred: %v\n", err)
-	}
-
-	for k := range cch.subHandlers {
-		fmt.Printf("  %s\n", k)
-	}
-
-	os.Exit(1)
-}
-
-// CoopsClientConfig holds command-line values and is used later to build a coops.ClientRequest.
-type CoopsClientConfig struct {
+// ClientConfig holds command-line values and is used later to build a coops.ClientRequest.
+type ClientConfig struct {
 	BeginDate      string
 	Count          int
 	Datum          string
@@ -73,13 +24,13 @@ type CoopsClientConfig struct {
 	Units          string
 }
 
-// NewCoopsClientConfig creates a new CoopsClientConfig.
-func NewCoopsClientConfig() *CoopsClientConfig {
-	return &CoopsClientConfig{}
+// NewClientConfig creates a new ClientConfig.
+func NewClientConfig() *ClientConfig {
+	return &ClientConfig{}
 }
 
 // GetFlagSet returns a generic flag set for CO-OPS API usage.
-func (ccc *CoopsClientConfig) GetFlagSet(name string, errorHandling flag.ErrorHandling) *flag.FlagSet {
+func (ccc *ClientConfig) GetFlagSet(name string, errorHandling flag.ErrorHandling) *flag.FlagSet {
 	fset := flag.NewFlagSet(name, errorHandling)
 	fset.StringVar(&ccc.BeginDate, "begin-date", "", "The begin date for the data set.")
 	fset.StringVar(
@@ -118,7 +69,7 @@ func (ccc *CoopsClientConfig) GetFlagSet(name string, errorHandling flag.ErrorHa
 
 // ToRequestOptions converts this config into list of coops.RequestOption's that will be used
 // to build a coops.Request object.
-func (ccc *CoopsClientConfig) ToRequestOptions() ([]coops.ClientRequestOption, error) {
+func (ccc *ClientConfig) ToRequestOptions() ([]coops.ClientRequestOption, error) {
 	datum, ok := coops.StringToDatum(ccc.Datum)
 	if !ok {
 		return nil, errors.New("datum param is invalid")

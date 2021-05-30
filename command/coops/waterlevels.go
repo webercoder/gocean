@@ -1,10 +1,8 @@
-package command
+package coops
 
 import (
 	"errors"
-	"flag"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/webercoder/gocean/src/coops"
@@ -12,26 +10,24 @@ import (
 
 // WaterLevelsCommandHandler handles water levels commands.
 type WaterLevelsCommandHandler struct {
-	clientConfig  *CoopsClientConfig
-	flagSet       *flag.FlagSet
+	BaseCommandHandler
 	waterLevelAPI *coops.WaterLevelAPI
 }
 
 // NewWaterLevelsCommandHandler creates a new Tides and Currents CommandHandler.
 func NewWaterLevelsCommandHandler() *WaterLevelsCommandHandler {
-	clientConfig := NewCoopsClientConfig()
 	return &WaterLevelsCommandHandler{
-		clientConfig:  clientConfig,
-		flagSet:       clientConfig.GetFlagSet(coops.ProductWaterLevel.String(), flag.ExitOnError),
-		waterLevelAPI: coops.NewWaterLevelAPI("gocean"),
+		BaseCommandHandler: *NewBaseCommandHandler(coops.ProductWaterLevel),
+		waterLevelAPI:      coops.NewWaterLevelAPI("gocean"),
 	}
 }
 
 // HandleCommand .
 func (wlch *WaterLevelsCommandHandler) HandleCommand() error {
+	wlch.ParseFlags()
 	wlch.validate()
 
-	req := coops.NewClientRequest(wlch.getRequestOptions()...)
+	req := coops.NewClientRequest(wlch.GetRequestOptions()...)
 
 	if wlch.clientConfig.Format == ResponseFormatPrettyPrint {
 		return wlch.handlePrettyPrint(req)
@@ -41,10 +37,6 @@ func (wlch *WaterLevelsCommandHandler) HandleCommand() error {
 }
 
 func (wlch *WaterLevelsCommandHandler) validate() {
-	if err := wlch.flagSet.Parse(os.Args[3:]); err != nil {
-		wlch.Usage(errors.New("unable to parse command-line options"))
-	}
-
 	if wlch.clientConfig.Station == "" {
 		wlch.Usage(errors.New("station is required"))
 	}
@@ -52,15 +44,6 @@ func (wlch *WaterLevelsCommandHandler) validate() {
 	if wlch.clientConfig.BeginDate == "" && wlch.clientConfig.EndDate == "" {
 		wlch.clientConfig.BeginDate = time.Now().Add(-1 * 24 * time.Hour).Format(coops.APIDateFormat)
 	}
-}
-
-func (wlch *WaterLevelsCommandHandler) getRequestOptions() []coops.ClientRequestOption {
-	reqOptions, err := wlch.clientConfig.ToRequestOptions()
-	if err != nil {
-		wlch.Usage(err)
-	}
-
-	return append(reqOptions, coops.WithProduct(coops.ProductWaterLevel))
 }
 
 func (wlch *WaterLevelsCommandHandler) handlePrettyPrint(req *coops.ClientRequest) error {
@@ -85,14 +68,4 @@ func (wlch *WaterLevelsCommandHandler) handleRawPrint(req *coops.ClientRequest) 
 
 	fmt.Println(string(resp))
 	return nil
-}
-
-// Usage prints how to use this command.
-func (wlch *WaterLevelsCommandHandler) Usage(err ...error) {
-	if len(err) > 0 {
-		fmt.Printf("The following errors occurred: %v\n", err)
-	}
-
-	wlch.flagSet.Usage()
-	os.Exit(1)
 }
