@@ -1,10 +1,8 @@
-package command
+package coops
 
 import (
 	"errors"
-	"flag"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/webercoder/gocean/src/coops"
@@ -12,26 +10,24 @@ import (
 
 // WaterTemperatureCommandHandler handles water levels commands.
 type WaterTemperatureCommandHandler struct {
-	clientConfig        *CoopsClientConfig
-	flagSet             *flag.FlagSet
+	BaseCommandHandler
 	WaterTemperatureAPI *coops.WaterTemperatureAPI
 }
 
 // NewWaterTemperatureCommandHandler creates a new Tides and Currents CommandHandler.
 func NewWaterTemperatureCommandHandler() *WaterTemperatureCommandHandler {
-	clientConfig := NewCoopsClientConfig()
 	return &WaterTemperatureCommandHandler{
-		clientConfig:        clientConfig,
-		flagSet:             clientConfig.GetFlagSet(coops.ProductWaterTemperature.String(), flag.ExitOnError),
+		BaseCommandHandler:  *NewBaseCommandHandler(coops.ProductWaterTemperature),
 		WaterTemperatureAPI: coops.NewWaterTemperatureAPI("gocean"),
 	}
 }
 
 // HandleCommand .
 func (atch *WaterTemperatureCommandHandler) HandleCommand() error {
+	atch.ParseFlags()
 	atch.validate()
 
-	req := coops.NewClientRequest(atch.getRequestOptions()...)
+	req := coops.NewClientRequest(atch.GetRequestOptions()...)
 
 	if atch.clientConfig.Format == ResponseFormatPrettyPrint {
 		return atch.handlePrettyPrint(req)
@@ -41,10 +37,6 @@ func (atch *WaterTemperatureCommandHandler) HandleCommand() error {
 }
 
 func (atch *WaterTemperatureCommandHandler) validate() {
-	if err := atch.flagSet.Parse(os.Args[3:]); err != nil {
-		atch.Usage(errors.New("unable to parse command-line options"))
-	}
-
 	if atch.clientConfig.Station == "" {
 		atch.Usage(errors.New("station is required"))
 	}
@@ -52,15 +44,6 @@ func (atch *WaterTemperatureCommandHandler) validate() {
 	if atch.clientConfig.BeginDate == "" && atch.clientConfig.EndDate == "" {
 		atch.clientConfig.BeginDate = time.Now().Add(-1 * 24 * time.Hour).Format(coops.APIDateFormat)
 	}
-}
-
-func (atch *WaterTemperatureCommandHandler) getRequestOptions() []coops.ClientRequestOption {
-	reqOptions, err := atch.clientConfig.ToRequestOptions()
-	if err != nil {
-		atch.Usage(err)
-	}
-
-	return append(reqOptions, coops.WithProduct(coops.ProductWaterTemperature))
 }
 
 func (atch *WaterTemperatureCommandHandler) handlePrettyPrint(req *coops.ClientRequest) error {
@@ -85,14 +68,4 @@ func (atch *WaterTemperatureCommandHandler) handleRawPrint(req *coops.ClientRequ
 
 	fmt.Println(string(resp))
 	return nil
-}
-
-// Usage prints how to use this command.
-func (atch *WaterTemperatureCommandHandler) Usage(err ...error) {
-	if len(err) > 0 {
-		fmt.Printf("The following errors occurred: %v\n", err)
-	}
-
-	atch.flagSet.Usage()
-	os.Exit(1)
 }

@@ -1,10 +1,8 @@
-package command
+package coops
 
 import (
 	"errors"
-	"flag"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/webercoder/gocean/src/coops"
@@ -12,26 +10,24 @@ import (
 
 // AirTemperatureCommandHandler handles water levels commands.
 type AirTemperatureCommandHandler struct {
-	clientConfig      *CoopsClientConfig
-	flagSet           *flag.FlagSet
+	BaseCommandHandler
 	AirTemperatureAPI *coops.AirTemperatureAPI
 }
 
 // NewAirTemperatureCommandHandler creates a new Tides and Currents CommandHandler.
 func NewAirTemperatureCommandHandler() *AirTemperatureCommandHandler {
-	clientConfig := NewCoopsClientConfig()
 	return &AirTemperatureCommandHandler{
-		clientConfig:      clientConfig,
-		flagSet:           clientConfig.GetFlagSet(coops.ProductAirTemperature.String(), flag.ExitOnError),
-		AirTemperatureAPI: coops.NewAirTemperatureAPI("gocean"),
+		BaseCommandHandler: *NewBaseCommandHandler(coops.ProductAirTemperature),
+		AirTemperatureAPI:  coops.NewAirTemperatureAPI("gocean"),
 	}
 }
 
-// HandleCommand .
+// HandleCommand processes this command.
 func (atch *AirTemperatureCommandHandler) HandleCommand() error {
+	atch.ParseFlags()
 	atch.validate()
 
-	req := coops.NewClientRequest(atch.getRequestOptions()...)
+	req := coops.NewClientRequest(atch.GetRequestOptions()...)
 
 	if atch.clientConfig.Format == ResponseFormatPrettyPrint {
 		return atch.handlePrettyPrint(req)
@@ -41,10 +37,6 @@ func (atch *AirTemperatureCommandHandler) HandleCommand() error {
 }
 
 func (atch *AirTemperatureCommandHandler) validate() {
-	if err := atch.flagSet.Parse(os.Args[3:]); err != nil {
-		atch.Usage(errors.New("unable to parse command-line options"))
-	}
-
 	if atch.clientConfig.Station == "" {
 		atch.Usage(errors.New("station is required"))
 	}
@@ -54,19 +46,10 @@ func (atch *AirTemperatureCommandHandler) validate() {
 	}
 }
 
-func (atch *AirTemperatureCommandHandler) getRequestOptions() []coops.ClientRequestOption {
-	reqOptions, err := atch.clientConfig.ToRequestOptions()
-	if err != nil {
-		atch.Usage(err)
-	}
-
-	return append(reqOptions, coops.WithProduct(coops.ProductAirTemperature))
-}
-
 func (atch *AirTemperatureCommandHandler) handlePrettyPrint(req *coops.ClientRequest) error {
 	results, err := atch.AirTemperatureAPI.GetAirTemperatures(req)
 	if err != nil {
-		return fmt.Errorf("could not load water levels for station: %v", err)
+		return err
 	}
 
 	if atch.clientConfig.Count > 0 {
@@ -80,19 +63,9 @@ func (atch *AirTemperatureCommandHandler) handlePrettyPrint(req *coops.ClientReq
 func (atch *AirTemperatureCommandHandler) handleRawPrint(req *coops.ClientRequest) error {
 	resp, err := atch.AirTemperatureAPI.Client.Get(req)
 	if err != nil {
-		return fmt.Errorf("could not retrieve water_level data: %v", err)
+		return err
 	}
 
 	fmt.Println(string(resp))
 	return nil
-}
-
-// Usage prints how to use this command.
-func (atch *AirTemperatureCommandHandler) Usage(err ...error) {
-	if len(err) > 0 {
-		fmt.Printf("The following errors occurred: %v\n", err)
-	}
-
-	atch.flagSet.Usage()
-	os.Exit(1)
 }
