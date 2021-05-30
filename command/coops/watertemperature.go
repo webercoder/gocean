@@ -14,7 +14,7 @@ type WaterTemperatureCommandHandler struct {
 	WaterTemperatureAPI *coops.WaterTemperatureAPI
 }
 
-// NewWaterTemperatureCommandHandler creates a new Tides and Currents CommandHandler.
+// NewWaterTemperatureCommandHandler creates a new WaterTemperatureCommandHandler.
 func NewWaterTemperatureCommandHandler() *WaterTemperatureCommandHandler {
 	return &WaterTemperatureCommandHandler{
 		BaseCommandHandler:  *NewBaseCommandHandler(coops.ProductWaterTemperature),

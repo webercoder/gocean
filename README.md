@@ -47,7 +47,7 @@ Finding nearest station to 92101
 The nearest Station is "San Diego, San Diego Bay" (ID: 9410170), which is 1.130777 kms away from 92101.
 ```
 
-### Get Air Temperatures
+### Air Temperatures
 
 ```txt
 gocean coops air_temperature
@@ -88,7 +88,7 @@ Air temperatures for station: 9410230
   2021-05-22 10:54  57.7
 ```
 
-### Get Tide Predictions
+### Tide Predictions
 
 ```txt
 gocean coops predictions
@@ -129,7 +129,7 @@ Tide predictions for station: 9414523
   2021-05-21 07:42  6.337
 ```
 
-### Get Water Levels
+### Water Levels
 
 ```txt
 gocean coops water_level
@@ -170,7 +170,7 @@ Tide water levels for station: 9410230
   2021-05-20 07:48  2.376  Preliminary
 ```
 
-### Get Water Temperatures
+### Water Temperatures
 
 ```txt
 gocean coops water_temperature
@@ -209,6 +209,57 @@ Water temperatures for station: 9410230
   2021-05-28 08:06  66.7
   2021-05-28 08:12  66.7
   2021-05-28 08:18  66.7
+```
+
+### Wind
+
+```txt
+gocean coops wind
+```
+
+Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
+
+```txt
+-begin-date string
+    The begin date for the data set.
+-count int
+    The number of results to display. Only works with the pretty format. (default -1)
+-datum string
+    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
+-end-date string
+    The end date for the data set.
+-format string
+    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
+-hours int
+    The offset from the start time. (default 24)
+-station string
+    The station to query.
+-time-zone-format string
+    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
+-units string
+    Either english or metric. Possible values: [english metric] (default "english")
+```
+
+Example:
+
+```txt
+$ gocean coops wind -station 9410230 -count 5
+Wind readings for station: 9410230
+2021-05-29 16:42
+  Speed/Gusts: 5.05/6.41
+  Direction: 249.00 (WSW)
+2021-05-29 16:48
+  Speed/Gusts: 5.25/8.16
+  Direction: 251.00 (WSW)
+2021-05-29 16:54
+  Speed/Gusts: 4.28/7.00
+  Direction: 253.00 (WSW)
+2021-05-29 17:00
+  Speed/Gusts: 5.64/6.61
+  Direction: 265.00 (W)
+2021-05-29 17:06
+  Speed/Gusts: 5.05/6.61
+  Direction: 267.00 (W)
 ```
 
 ## Code Structure

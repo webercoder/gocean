@@ -14,7 +14,7 @@ type PredictionsCommandHandler struct {
 	predAPI *coops.PredictionsAPI
 }
 
-// NewPredictionsCommandHandler creates a new Tides and Currents CommandHandler
+// NewPredictionsCommandHandler creates a new PredictionsCommandHandler.
 func NewPredictionsCommandHandler() *PredictionsCommandHandler {
 	return &PredictionsCommandHandler{
 		BaseCommandHandler: *NewBaseCommandHandler(coops.ProductPredictions),

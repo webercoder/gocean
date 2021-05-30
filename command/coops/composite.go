@@ -14,7 +14,7 @@ type CompositeCommandHandler struct {
 	subHandlers map[coops.Product]command.CoopsHandler
 }
 
-// NewCompositeCommandHandler creates a new Tides and Currents CommandHandler.
+// NewCompositeCommandHandler creates a new CompositeCommandHandler.
 func NewCompositeCommandHandler() *CompositeCommandHandler {
 	return &CompositeCommandHandler{
 		subHandlers: map[coops.Product]command.CoopsHandler{
@@ -22,6 +22,7 @@ func NewCompositeCommandHandler() *CompositeCommandHandler {
 			coops.ProductPredictions:      NewPredictionsCommandHandler(),
 			coops.ProductWaterLevel:       NewWaterLevelsCommandHandler(),
 			coops.ProductWaterTemperature: NewWaterTemperatureCommandHandler(),
+			coops.ProductWind:             NewWindCommandHandler(),
 		},
 	}
 }

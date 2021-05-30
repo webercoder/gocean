@@ -70,10 +70,10 @@ func (api *WindAPI) GetWind(req *ClientRequest) ([]Wind, error) {
 
 // PrintTabDelimited outputs the data in text format.
 func (api *WindAPI) PrintTabDelimited(station string, winds []Wind) {
-	fmt.Println("Winds for station:", station)
+	fmt.Println("Wind readings for station:", station)
 	for _, w := range winds {
-		fmt.Printf("\t%s\n", w.Time)
-		fmt.Printf("\t\tSpeed/Gusts: %s/%s\n", w.Speed, w.Gusts)
-		fmt.Printf("\t\tDirection: %s (%s)\n", w.DirectionDegrees, w.DirectionAcronym)
+		fmt.Printf("%s\n", w.Time)
+		fmt.Printf("\tSpeed/Gusts: %s/%s\n", w.Speed, w.Gusts)
+		fmt.Printf("\tDirection: %s (%s)\n", w.DirectionDegrees, w.DirectionAcronym)
 	}
 }

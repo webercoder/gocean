@@ -16,7 +16,7 @@ type BaseCommandHandler struct {
 	product      coops.Product
 }
 
-// NewBaseCommandHandler creates a new Tides and Currents CommandHandler.
+// NewBaseCommandHandler creates a new BaseCommandHandler.
 func NewBaseCommandHandler(prod coops.Product) *BaseCommandHandler {
 	clientConfig := NewClientConfig()
 	return &BaseCommandHandler{
