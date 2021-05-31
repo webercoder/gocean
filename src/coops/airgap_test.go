@@ -64,9 +64,9 @@ func TestGetAirGaps(t *testing.T) {
 		t.Error("Unexpected value for the third entry", data[2].Value)
 	}
 	if data[2].Sigma != "0.036" {
-		t.Error("Unexpected sigma for the third entry", data[2].Value)
+		t.Error("Unexpected sigma for the third entry", data[2].Sigma)
 	}
 	if data[2].Flags != "0,0,0,0" {
-		t.Error("Unexpected flags for the third entry", data[2].Value)
+		t.Error("Unexpected flags for the third entry", data[2].Flags)
 	}
 }

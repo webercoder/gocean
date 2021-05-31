@@ -21,6 +21,7 @@ func NewCompositeCommandHandler() *CompositeCommandHandler {
 			coops.ProductAirGap:           NewAirGapCommandHandler(),
 			coops.ProductAirPressure:      NewAirPressureCommandHandler(),
 			coops.ProductAirTemperature:   NewAirTemperatureCommandHandler(),
+			coops.ProductConductivity:     NewConductivityCommandHandler(),
 			coops.ProductPredictions:      NewPredictionsCommandHandler(),
 			coops.ProductWaterLevel:       NewWaterLevelsCommandHandler(),
 			coops.ProductWaterTemperature: NewWaterTemperatureCommandHandler(),

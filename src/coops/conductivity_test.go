@@ -6,7 +6,7 @@ import (
 	"github.com/webercoder/gocean/src/coops"
 )
 
-const NOAAAirPressureJSONData = `{
+const NOAAConductivityJSONData = `{
     "metadata": {
         "id": "9410230",
         "name": "La Jolla",
@@ -15,47 +15,50 @@ const NOAAAirPressureJSONData = `{
     },
     "data": [{
         "t": "2021-05-23 06:48",
-        "v": "1019.0",
+        "v": "37.09",
         "f": "0,0,0"
     }, {
         "t": "2021-05-23 06:54",
-        "v": "1019.0",
+        "v": "37.12",
         "f": "0,0,0"
     }, {
         "t": "2021-05-23 07:00",
-        "v": "1019.1",
+        "v": "37.13",
         "f": "0,0,0"
     }, {
         "t": "2021-05-23 07:06",
-        "v": "1019.2",
+        "v": "37.10",
         "f": "0,0,0"
     }, {
         "t": "2021-05-23 07:12",
-        "v": "1019.2",
+        "v": "37.09",
         "f": "0,0,0"
     }]
 }`
 
-func TestGetAirPressure(t *testing.T) {
-	api := &coops.AirPressureAPI{
+func TestGetConductivity(t *testing.T) {
+	api := &coops.ConductivityAPI{
 		App:    "gocean_test",
-		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAAirPressureJSONData}},
+		Client: &coops.Client{HTTPClient: &FakeCoopsClient{JsonData: NOAAConductivityJSONData}},
 	}
 	station := "9410170"
-	data, err := api.GetAirPressure(coops.NewClientRequest(
+	data, err := api.GetConductivity(coops.NewClientRequest(
 		coops.WithStation(station),
 		coops.WithHours(1),
 	))
 	if err != nil {
-		t.Error("Did not expect error when retrieving air pressure data", err)
+		t.Error("Did not expect error when retrieving air conductivity data", err)
 	}
 	if len(data) != 5 {
-		t.Error("Incorrect number of air pressure received", data)
+		t.Error("Incorrect number of air conductivity received", data)
 	}
 	if data[2].Time != "2021-05-23 07:00" {
 		t.Error("Unexpected time for the third entry", data[2].Time)
 	}
-	if data[2].Value != "1019.1" {
+	if data[2].Value != "37.13" {
 		t.Error("Unexpected value for the third entry", data[2].Value)
+	}
+	if data[2].Flags != "0,0,0" {
+		t.Error("Unexpected flags for the third entry", data[2].Flags)
 	}
 }

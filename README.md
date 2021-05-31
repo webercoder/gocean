@@ -93,7 +93,7 @@ Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Co
 Example:
 
 ```txt
-gocean coops air_gap -station 8545556 -count 5
+$ gocean coops air_gap -station 8545556 -count 5
 Air gap readings for station: 8545556
   2021-05-30 05:54  130.335 (Sigma: 0.056)
   2021-05-30 06:00  130.344 (Sigma: 0.033)
@@ -134,7 +134,7 @@ Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Co
 Example:
 
 ```txt
-gocean coops air_pressure -station 9410230 -count 5
+$ gocean coops air_pressure -station 9410230 -count 5
 Air pressure readings for station: 9410230
   2021-05-29 20:42  1013.0
   2021-05-29 20:48  1013.0
@@ -182,6 +182,47 @@ Air temperatures for station: 9410230
   2021-05-22 10:42  57.7
   2021-05-22 10:48  57.9
   2021-05-22 10:54  57.7
+```
+
+### Conductivity
+
+```txt
+gocean coops conductivity
+```
+
+Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
+
+```txt
+-begin-date string
+    The begin date for the data set.
+-count int
+    The number of results to display. Only works with the pretty format. (default -1)
+-datum string
+    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
+-end-date string
+    The end date for the data set.
+-format string
+    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
+-hours int
+    The offset from the start time. (default 24)
+-station string
+    The station to query.
+-time-zone-format string
+    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
+-units string
+    Either english or metric. Possible values: [english metric] (default "english")
+```
+
+Example:
+
+```txt
+$ gocean coops conductivity -station 8447386 -count 5
+Conductivity readings for station: 8447386
+  2021-05-30 06:18  36.35 (0,0,0)
+  2021-05-30 06:24  36.36 (0,0,0)
+  2021-05-30 06:30  36.38 (0,0,0)
+  2021-05-30 06:36  36.39 (0,0,0)
+  2021-05-30 06:42  36.39 (0,0,0)
 ```
 
 ### Tide Predictions
