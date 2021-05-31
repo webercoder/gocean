@@ -18,6 +18,7 @@ type CompositeCommandHandler struct {
 func NewCompositeCommandHandler() *CompositeCommandHandler {
 	return &CompositeCommandHandler{
 		subHandlers: map[coops.Product]command.CoopsHandler{
+			coops.ProductAirGap:           NewAirGapCommandHandler(),
 			coops.ProductAirPressure:      NewAirPressureCommandHandler(),
 			coops.ProductAirTemperature:   NewAirTemperatureCommandHandler(),
 			coops.ProductPredictions:      NewPredictionsCommandHandler(),

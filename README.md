@@ -11,6 +11,7 @@ gocean is a set of NOAA API wrappers and tools written in Go. It is currently un
 * [Installation](#installation)
 * [Command-Line Usage](#command-line-usage)
   * [Get the Nearest Station](#get-the-nearest-station)
+  * [Air Gap](#air-gap)
   * [Air Pressure](#air-pressure)
   * [Air Temperatures](#air-temperatures)
   * [Tide Predictions](#tide-predictions)
@@ -58,6 +59,47 @@ The nearest Station is "Redwood City" (ID: 9414523), which is 23.072995 kms away
 $ gocean stations -postcode 92101
 Finding nearest station to 92101
 The nearest Station is "San Diego, San Diego Bay" (ID: 9410170), which is 1.130777 kms away from 92101.
+```
+
+### Air Gap
+
+```txt
+gocean coops air_gap
+```
+
+Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
+
+```txt
+-begin-date string
+    The begin date for the data set.
+-count int
+    The number of results to display. Only works with the pretty format. (default -1)
+-datum string
+    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
+-end-date string
+    The end date for the data set.
+-format string
+    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
+-hours int
+    The offset from the start time. (default 24)
+-station string
+    The station to query.
+-time-zone-format string
+    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
+-units string
+    Either english or metric. Possible values: [english metric] (default "english")
+```
+
+Example:
+
+```txt
+gocean coops air_gap -station 8545556 -count 5
+Air gap readings for station: 8545556
+  2021-05-30 05:54  130.335 (Sigma: 0.056)
+  2021-05-30 06:00  130.344 (Sigma: 0.033)
+  2021-05-30 06:06  130.413 (Sigma: 0.052)
+  2021-05-30 06:12  130.479 (Sigma: 0.062)
+  2021-05-30 06:18  130.568 (Sigma: 0.043)
 ```
 
 ### Air Pressure
