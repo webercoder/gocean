@@ -14,6 +14,7 @@ gocean is a set of NOAA API wrappers and tools written in Go. It is currently un
   * [Air Gap](#air-gap)
   * [Air Pressure](#air-pressure)
   * [Air Temperatures](#air-temperatures)
+  * [Conductivity](#conductivity)
   * [Tide Predictions](#tide-predictions)
   * [Water Levels](#water-levels)
   * [Water Temperatures](#water-temperatures)
