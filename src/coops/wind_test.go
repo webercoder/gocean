@@ -82,7 +82,7 @@ func TestGetWinds(t *testing.T) {
 	if data[2].Gusts != "3.89" {
 		t.Error("Unexpected gusts for the third entry", data[2].Speed)
 	}
-	if data[2].F != "0,0" {
-		t.Error("Unexpected f for the third entry", data[2].F)
+	if data[2].Flags != "0,0" {
+		t.Error("Unexpected f for the third entry", data[2].Flags)
 	}
 }

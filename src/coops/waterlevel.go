@@ -21,9 +21,8 @@ type WaterLevelResult struct {
 // WaterLevel is a singular, deserialized water level.
 type WaterLevel struct {
 	XMLName xml.Name `xml:"wl"`
-	Time    string   `xml:"t,attr" json:"t"`
-	Value   string   `xml:"v,attr" json:"v"`
-	Quality string   `xml:"q,attr" json:"q"`
+	ValueBasedResultWithFlags
+	Quality string `xml:"q,attr" json:"q"`
 }
 
 // NewWaterLevelAPI creates a new water level API client.

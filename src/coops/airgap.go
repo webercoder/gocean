@@ -21,10 +21,8 @@ type AirGapResult struct {
 // AirGap is a singular, deserialized air gap.
 type AirGap struct {
 	XMLName xml.Name `xml:"at"`
-	Time    string   `xml:"t,attr" json:"t"`
-	Value   string   `xml:"v,attr" json:"v"`
-	Sigma   string   `xml:"s,attr" json:"s"`
-	Flags   string   `xml:"f,attr" json:"f"`
+	ValueBasedResultWithFlags
+	Sigma string `xml:"s,attr" json:"s"`
 }
 
 // NewAirGapAPI creates a new air gap API client.

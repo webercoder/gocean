@@ -26,6 +26,7 @@ func NewCompositeCommandHandler() *CompositeCommandHandler {
 			coops.ProductWaterLevel:       NewWaterLevelsCommandHandler(),
 			coops.ProductWaterTemperature: NewWaterTemperatureCommandHandler(),
 			coops.ProductWind:             NewWindCommandHandler(),
+			coops.ProductVisibility:       NewVisibilityCommandHandler(),
 		},
 	}
 }

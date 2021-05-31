@@ -20,10 +20,8 @@ type ConductivityResult struct {
 
 // Conductivity is a singular, deserialized conductivity.
 type Conductivity struct {
-	XMLName xml.Name `xml:"at"`
-	Time    string   `xml:"t,attr" json:"t"`
-	Value   string   `xml:"v,attr" json:"v"`
-	Flags   string   `xml:"f,attr" json:"f"`
+	XMLName xml.Name `xml:"ct"`
+	ValueBasedResultWithFlags
 }
 
 // NewConductivityAPI creates a new conductivity API client.

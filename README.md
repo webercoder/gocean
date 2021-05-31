@@ -4,21 +4,24 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/webercoder/gocean)](https://goreportcard.com/report/github.com/webercoder/gocean)
 [![Maintainability](https://api.codeclimate.com/v1/badges/f9d7f2157e1538a06b13/maintainability)](https://codeclimate.com/github/webercoder/gocean/maintainability)
 
-gocean is a set of NOAA API wrappers and tools written in Go. It is currently under initial development and not ready for external consumption.
+gocean is a set of NOAA API wrappers and tools written in Go. It is currently under active, initial development.
 
 ## Table of Contents
 
 * [Installation](#installation)
 * [Command-Line Usage](#command-line-usage)
-  * [Get the Nearest Station](#get-the-nearest-station)
-  * [Air Gap](#air-gap)
-  * [Air Pressure](#air-pressure)
-  * [Air Temperatures](#air-temperatures)
-  * [Conductivity](#conductivity)
-  * [Tide Predictions](#tide-predictions)
-  * [Water Levels](#water-levels)
-  * [Water Temperatures](#water-temperatures)
-  * [Wind](#wind)
+  * [CO-OPS Stations API](#co-ops-stations-api)
+    * [Air Gap](#air-gap)
+    * [Air Pressure](#air-pressure)
+    * [Air Temperatures](#air-temperatures)
+    * [Conductivity](#conductivity)
+    * [Tide Predictions](#tide-predictions)
+    * [Visibility](#visibility)
+    * [Water Levels](#water-levels)
+    * [Water Temperatures](#water-temperatures)
+    * [Wind](#wind)
+  * [Stations Info API](#stations-info-api)
+    * [Get the Nearest Station](#get-the-nearest-station)
 * [Code Structure](#code-structure)
 
 ## Installation
@@ -37,38 +40,9 @@ go install github.com/webercoder/gocean
 
 ## Command-Line Usage
 
-### Get the Nearest Station
+### CO-OPS Stations API
 
-```txt
-gocean stations
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
-
-```txt
--postcode string
-    Find stations near this postcode
-```
-
-Example:
-
-```txt
-$ gocean stations -postcode 94087
-Finding nearest station to 94087
-The nearest Station is "Redwood City" (ID: 9414523), which is 23.072995 kms away from 94087.
-
-$ gocean stations -postcode 92101
-Finding nearest station to 92101
-The nearest Station is "San Diego, San Diego Bay" (ID: 9410170), which is 1.130777 kms away from 92101.
-```
-
-### Air Gap
-
-```txt
-gocean coops air_gap
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
+The operations below use the following command-line parameter structure ([in Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
 
 ```txt
 -begin-date string
@@ -89,6 +63,12 @@ Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Co
     The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
 -units string
     Either english or metric. Possible values: [english metric] (default "english")
+```
+
+#### Air Gap
+
+```txt
+gocean coops air_gap
 ```
 
 Example:
@@ -103,33 +83,10 @@ Air gap readings for station: 8545556
   2021-05-30 06:18  130.568 (Sigma: 0.043)
 ```
 
-### Air Pressure
+#### Air Pressure
 
 ```txt
 gocean coops air_pressure
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
-
-```txt
--begin-date string
-    The begin date for the data set.
--count int
-    The number of results to display. Only works with the pretty format. (default -1)
--datum string
-    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
--end-date string
-    The end date for the data set.
--format string
-    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
--hours int
-    The offset from the start time. (default 24)
--station string
-    The station to query.
--time-zone-format string
-    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
--units string
-    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:
@@ -144,33 +101,10 @@ Air pressure readings for station: 9410230
   2021-05-29 21:06  1013.1
 ```
 
-### Air Temperatures
+#### Air Temperatures
 
 ```txt
 gocean coops air_temperature
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
-
-```txt
--begin-date string
-    The begin date for the data set.
--count int
-    The number of results to display. Only works with the pretty format. (default -1)
--datum string
-    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
--end-date string
-    The end date for the data set.
--format string
-    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
--hours int
-    The offset from the start time. (default 24)
--station string
-    The station to query.
--time-zone-format string
-    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
--units string
-    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:
@@ -185,33 +119,10 @@ Air temperatures for station: 9410230
   2021-05-22 10:54  57.7
 ```
 
-### Conductivity
+#### Conductivity
 
 ```txt
 gocean coops conductivity
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
-
-```txt
--begin-date string
-    The begin date for the data set.
--count int
-    The number of results to display. Only works with the pretty format. (default -1)
--datum string
-    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
--end-date string
-    The end date for the data set.
--format string
-    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
--hours int
-    The offset from the start time. (default 24)
--station string
-    The station to query.
--time-zone-format string
-    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
--units string
-    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:
@@ -226,33 +137,28 @@ Conductivity readings for station: 8447386
   2021-05-30 06:42  36.39 (0,0,0)
 ```
 
-### Tide Predictions
+#### Visibility
+
+```txt
+gocean coops visiblity
+```
+
+Example:
+
+```txt
+$ gocean coops visibility -station 8447412 -count 5
+Visibility readings for station: 8447412
+  2021-05-30 08:06  5.40 (0,0,0)
+  2021-05-30 08:12  5.40 (0,0,0)
+  2021-05-30 08:18  5.40 (0,0,0)
+  2021-05-30 08:24  5.40 (0,0,0)
+  2021-05-30 08:30  5.40 (0,0,0)
+```
+
+#### Tide Predictions
 
 ```txt
 gocean coops predictions
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
-
-```txt
--begin-date string
-    The begin date for the data set.
--count int
-    The number of results to display. Only works with the pretty format. (default -1)
--datum string
-    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
--end-date string
-    The end date for the data set.
--format string
-    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
--hours int
-    The offset from the start time. (default 24)
--station string
-    The station to query.
--time-zone-format string
-    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
--units string
-    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:
@@ -267,33 +173,10 @@ Tide predictions for station: 9414523
   2021-05-21 07:42  6.337
 ```
 
-### Water Levels
+#### Water Levels
 
 ```txt
 gocean coops water_level
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
-
-```txt
--begin-date string
-    The begin date for the data set.
--count int
-    The number of results to display. Only works with the pretty format. (default -1)
--datum string
-    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
--end-date string
-    The end date for the data set.
--format string
-    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
--hours int
-    The offset from the start time. (default 24)
--station string
-    The station to query.
--time-zone-format string
-    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
--units string
-    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:
@@ -308,33 +191,10 @@ Tide water levels for station: 9410230
   2021-05-20 07:48  2.376  Preliminary
 ```
 
-### Water Temperatures
+#### Water Temperatures
 
 ```txt
 gocean coops water_temperature
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
-
-```txt
--begin-date string
-    The begin date for the data set.
--count int
-    The number of results to display. Only works with the pretty format. (default -1)
--datum string
-    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
--end-date string
-    The end date for the data set.
--format string
-    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
--hours int
-    The offset from the start time. (default 24)
--station string
-    The station to query.
--time-zone-format string
-    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
--units string
-    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:
@@ -349,33 +209,10 @@ Water temperatures for station: 9410230
   2021-05-28 08:18  66.7
 ```
 
-### Wind
+#### Wind
 
 ```txt
 gocean coops wind
-```
-
-Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
-
-```txt
--begin-date string
-    The begin date for the data set.
--count int
-    The number of results to display. Only works with the pretty format. (default -1)
--datum string
-    The datum to query. Possible values: [CRD IGLD LWD MHHW MHW MTL MSL MLW MLLW NAVD STND] (default "MLLW")
--end-date string
-    The end date for the data set.
--format string
-    The output format of the results. Possible values: [json xml csv pretty] (default "pretty")
--hours int
-    The offset from the start time. (default 24)
--station string
-    The station to query.
--time-zone-format string
-    The time zone format. Possible values: [gmt lst lst_ldt] (default "lst_ldt")
--units string
-    Either english or metric. Possible values: [english metric] (default "english")
 ```
 
 Example:
@@ -398,6 +235,35 @@ Wind readings for station: 9410230
 2021-05-29 17:06
   Speed/Gusts: 5.05/6.61
   Direction: 267.00 (W)
+```
+
+### Stations Info API
+
+This isn't an official NOAA API, but it uses the stations list to provide additional information.
+
+#### Get the Nearest Station
+
+```txt
+gocean stations
+```
+
+Supported parameters ([using Go flag syntax](https://golang.org/pkg/flag/#hdr-Command_line_flag_syntax)):
+
+```txt
+-postcode string
+    Find stations near this postcode
+```
+
+Example:
+
+```txt
+$ gocean stations -postcode 94087
+Finding nearest station to 94087
+The nearest Station is "Redwood City" (ID: 9414523), which is 23.072995 kms away from 94087.
+
+$ gocean stations -postcode 92101
+Finding nearest station to 92101
+The nearest Station is "San Diego, San Diego Bay" (ID: 9410170), which is 1.130777 kms away from 92101.
 ```
 
 ## Code Structure

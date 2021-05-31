@@ -21,8 +21,7 @@ type AirTemperatureResult struct {
 // AirTemperature is a singular, deserialized air temperature.
 type AirTemperature struct {
 	XMLName xml.Name `xml:"at"`
-	Time    string   `xml:"t,attr" json:"t"`
-	Value   string   `xml:"v,attr" json:"v"`
+	ValueBasedResult
 }
 
 // NewAirTemperatureAPI creates a new air temperature API client.

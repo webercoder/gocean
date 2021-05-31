@@ -20,13 +20,13 @@ type WindResult struct {
 
 // Wind is a singular, deserialized wind.
 type Wind struct {
-	XMLName          xml.Name `xml:"at"`
+	XMLName          xml.Name `xml:"ws"`
 	Time             string   `xml:"t,attr" json:"t"`
 	Speed            string   `xml:"s,attr" json:"s"`
 	DirectionDegrees string   `xml:"d,attr" json:"d"`
 	DirectionAcronym string   `xml:"dr,attr" json:"dr"`
 	Gusts            string   `xml:"g,attr" json:"g"`
-	F                string   `xml:"f,attr" json:"f"`
+	Flags            string   `xml:"f,attr" json:"f"`
 }
 
 // NewWindAPI creates a new wind API client.

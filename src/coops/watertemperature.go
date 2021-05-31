@@ -20,9 +20,8 @@ type WaterTemperatureResult struct {
 
 // WaterTemperature is a singular, deserialized water temperature.
 type WaterTemperature struct {
-	XMLName xml.Name `xml:"at"`
-	Time    string   `xml:"t,attr" json:"t"`
-	Value   string   `xml:"v,attr" json:"v"`
+	XMLName xml.Name `xml:"wt"`
+	ValueBasedResult
 }
 
 // NewWaterTemperatureAPI creates a new water temperature API client.

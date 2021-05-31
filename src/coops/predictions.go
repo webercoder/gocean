@@ -2,18 +2,20 @@ package coops
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 )
 
 // PredictionsResult contains tide predictions from a station
 type PredictionsResult struct {
+	XMLName     xml.Name     `xml:"data"`
 	Predictions []Prediction `json:"predictions"`
 }
 
 // Prediction contains a single tide prediction for a specific time.
 type Prediction struct {
-	Time  string `json:"t"`
-	Value string `json:"v"`
+	XMLName xml.Name `xml:"pr"`
+	ValueBasedResult
 }
 
 // PredictionsAPI interacts with the predictions product.

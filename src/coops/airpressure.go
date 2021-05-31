@@ -20,10 +20,8 @@ type AirPressureResult struct {
 
 // AirPressure is a singular, deserialized air pressure.
 type AirPressure struct {
-	XMLName xml.Name `xml:"at"`
-	Time    string   `xml:"t,attr" json:"t"`
-	Value   string   `xml:"v,attr" json:"v"`
-	F       string   `xml:"f,attr" json:"f"`
+	XMLName xml.Name `xml:"ap"`
+	ValueBasedResultWithFlags
 }
 
 // NewAirPressureAPI creates a new air pressure API client.
