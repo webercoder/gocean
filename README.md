@@ -75,12 +75,13 @@ Example:
 
 ```txt
 $ gocean coops air_gap -station 8545556 -count 5
-Air gap readings for station: 8545556
-  2021-05-30 05:54  130.335 (Sigma: 0.056)
-  2021-05-30 06:00  130.344 (Sigma: 0.033)
-  2021-05-30 06:06  130.413 (Sigma: 0.052)
-  2021-05-30 06:12  130.479 (Sigma: 0.062)
-  2021-05-30 06:18  130.568 (Sigma: 0.043)
+Air gap readings for station 8545556:
+
+2021-05-31 06:48: 130.945ft (Sigma: 0.039, Flags: 0,0,0,0)
+2021-05-31 06:54: 130.938ft (Sigma: 0.030, Flags: 0,0,0,0)
+2021-05-31 07:00: 130.997ft (Sigma: 0.020, Flags: 0,0,0,0)
+2021-05-31 07:06: 131.037ft (Sigma: 0.023, Flags: 0,0,0,0)
+2021-05-31 07:12: 131.106ft (Sigma: 0.030, Flags: 0,0,0,0)
 ```
 
 #### Air Pressure
@@ -93,12 +94,13 @@ Example:
 
 ```txt
 $ gocean coops air_pressure -station 9410230 -count 5
-Air pressure readings for station: 9410230
-  2021-05-29 20:42  1013.0
-  2021-05-29 20:48  1013.0
-  2021-05-29 20:54  1013.1
-  2021-05-29 21:00  1013.1
-  2021-05-29 21:06  1013.1
+Air pressure readings for station 9410230:
+
+2021-05-31 06:48: 1014.6mbar (Flags: 0,0,0)
+2021-05-31 06:54: 1014.6mbar (Flags: 0,0,0)
+2021-05-31 07:00: 1014.7mbar (Flags: 0,0,0)
+2021-05-31 07:06: 1014.7mbar (Flags: 0,0,0)
+2021-05-31 07:12: 1014.7mbar (Flags: 0,0,0)
 ```
 
 #### Air Temperatures
@@ -111,12 +113,13 @@ Example:
 
 ```txt
 $ gocean coops air_temperature --station 9410230 --count 5
-Air temperatures for station: 9410230
-  2021-05-22 10:30  57.9
-  2021-05-22 10:36  58.5
-  2021-05-22 10:42  57.7
-  2021-05-22 10:48  57.9
-  2021-05-22 10:54  57.7
+Air temperature readings for station 9410230:
+
+2021-05-31 06:48: 60.3°f
+2021-05-31 06:54: 60.1°f
+2021-05-31 07:00: 60.3°f
+2021-05-31 07:06: 60.1°f
+2021-05-31 07:12: 60.1°f
 ```
 
 #### Conductivity
@@ -129,12 +132,13 @@ Example:
 
 ```txt
 $ gocean coops conductivity -station 8447386 -count 5
-Conductivity readings for station: 8447386
-  2021-05-30 06:18  36.35 (0,0,0)
-  2021-05-30 06:24  36.36 (0,0,0)
-  2021-05-30 06:30  36.38 (0,0,0)
-  2021-05-30 06:36  36.39 (0,0,0)
-  2021-05-30 06:42  36.39 (0,0,0)
+Conductivity readings for station 8447386:
+
+2021-05-31 06:48: 35.81mS/cm (Flags: 0,0,0)
+2021-05-31 06:54: 36.23mS/cm (Flags: 0,0,0)
+2021-05-31 07:00: 36.44mS/cm (Flags: 0,0,0)
+2021-05-31 07:06: 36.51mS/cm (Flags: 0,0,0)
+2021-05-31 07:12: 35.84mS/cm (Flags: 0,0,0)
 ```
 
 #### Visibility
@@ -147,12 +151,13 @@ Example:
 
 ```txt
 $ gocean coops visibility -station 8447412 -count 5
-Visibility readings for station: 8447412
-  2021-05-30 08:06  5.40 (0,0,0)
-  2021-05-30 08:12  5.40 (0,0,0)
-  2021-05-30 08:18  5.40 (0,0,0)
-  2021-05-30 08:24  5.40 (0,0,0)
-  2021-05-30 08:30  5.40 (0,0,0)
+Visibility readings for station 8447412:
+
+2021-05-31 06:48: 1.86nmi (Flags: 0,0,0)
+2021-05-31 06:54: 1.86nmi (Flags: 0,0,0)
+2021-05-31 07:00: 1.90nmi (Flags: 0,0,0)
+2021-05-31 07:06: 3.34nmi (Flags: 0,0,0)
+2021-05-31 07:12: 3.38nmi (Flags: 0,0,0)
 ```
 
 #### Tide Predictions
@@ -165,12 +170,13 @@ Example:
 
 ```txt
 $ gocean coops predictions -station 9414523 -count 5
-Tide predictions for station: 9414523
-  2021-05-21 07:18  6.106
-  2021-05-21 07:24  6.172
-  2021-05-21 07:30  6.232
-  2021-05-21 07:36  6.287
-  2021-05-21 07:42  6.337
+Tide predictions for station 9414523:
+
+2021-06-01 06:42: 6.551ft
+2021-06-01 06:48: 6.472ft
+2021-06-01 06:54: 6.387ft
+2021-06-01 07:00: 6.296ft
+2021-06-01 07:06: 6.200ft
 ```
 
 #### Water Levels
@@ -183,12 +189,13 @@ Example:
 
 ```txt
 $ gocean coops water_level -station 9410230 -count 5
-Tide water levels for station: 9410230
-  2021-05-20 07:24  2.734  Preliminary
-  2021-05-20 07:30  2.678  Preliminary
-  2021-05-20 07:36  2.556  Preliminary
-  2021-05-20 07:42  2.458  Preliminary
-  2021-05-20 07:48  2.376  Preliminary
+Tide water levels for station 9410230:
+
+2021-05-31 06:48: 0.362ft (Quality: Preliminary, Flags: 1,0,0,0)
+2021-05-31 06:54: 0.289ft (Quality: Preliminary, Flags: 1,0,0,0)
+2021-05-31 07:00: 0.234ft (Quality: Preliminary, Flags: 1,0,0,0)
+2021-05-31 07:06: 0.168ft (Quality: Preliminary, Flags: 1,0,0,0)
+2021-05-31 07:12: 0.076ft (Quality: Preliminary, Flags: 1,0,0,0)
 ```
 
 #### Water Temperatures
@@ -201,12 +208,13 @@ Example:
 
 ```txt
 $ gocean coops water_temperature --station 9410230 --count 5
-Water temperatures for station: 9410230
-  2021-05-28 07:54  66.7
-  2021-05-28 08:00  66.7
-  2021-05-28 08:06  66.7
-  2021-05-28 08:12  66.7
-  2021-05-28 08:18  66.7
+Water temperature readings for station 9410230:
+
+2021-05-31 06:48: 66.7°f
+2021-05-31 06:54: 66.7°f
+2021-05-31 07:00: 66.7°f
+2021-05-31 07:06: 66.7°f
+2021-05-31 07:12: 66.7°f
 ```
 
 #### Wind
@@ -219,22 +227,13 @@ Example:
 
 ```txt
 $ gocean coops wind -station 9410230 -count 5
-Wind readings for station: 9410230
-2021-05-29 16:42
-  Speed/Gusts: 5.05/6.41
-  Direction: 249.00 (WSW)
-2021-05-29 16:48
-  Speed/Gusts: 5.25/8.16
-  Direction: 251.00 (WSW)
-2021-05-29 16:54
-  Speed/Gusts: 4.28/7.00
-  Direction: 253.00 (WSW)
-2021-05-29 17:00
-  Speed/Gusts: 5.64/6.61
-  Direction: 265.00 (W)
-2021-05-29 17:06
-  Speed/Gusts: 5.05/6.61
-  Direction: 267.00 (W)
+Wind readings for station 9410230:
+
+2021-05-31 06:48: 3.89kn from the SW (218.00) with gusts of 5.25kn
+2021-05-31 06:54: 2.92kn from the SSW (206.00) with gusts of 5.25kn
+2021-05-31 07:00: 2.14kn from the SSW (196.00) with gusts of 4.47kn
+2021-05-31 07:06: 5.05kn from the S (188.00) with gusts of 6.61kn
+2021-05-31 07:12: 4.67kn from the SSW (198.00) with gusts of 7.00kn
 ```
 
 ### Stations Info API
