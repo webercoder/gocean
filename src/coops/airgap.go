@@ -65,9 +65,13 @@ func (api *AirGapAPI) GetAirGap(req *ClientRequest) ([]AirGap, error) {
 }
 
 // PrintTabDelimited outputs the data in text format.
-func (api *AirGapAPI) PrintTabDelimited(station string, airgaps []AirGap) {
-	fmt.Println("Air gap readings for station:", station)
-	for _, ag := range airgaps {
-		fmt.Printf("\t%s\t%s (Sigma: %s)\n", ag.Time, ag.Value, ag.Sigma)
+func (api *AirGapAPI) PrintTabDelimited(req *ClientRequest, airgaps []AirGap) {
+	fmt.Printf("Air gap readings for station %s:\n\n", req.Station)
+	units := "ft"
+	if req.Units == UnitsMetric {
+		units = "m"
+	}
+	for _, el := range airgaps {
+		fmt.Printf("%s: %s%s (Sigma: %s, Flags: %s)\n", el.Time, el.Value, units, el.Sigma, el.Flags)
 	}
 }

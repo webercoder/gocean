@@ -64,9 +64,13 @@ func (api *VisibilityAPI) GetVisibility(req *ClientRequest) ([]Visibility, error
 }
 
 // PrintTabDelimited outputs the data in text format.
-func (api *VisibilityAPI) PrintTabDelimited(station string, visibilityData []Visibility) {
-	fmt.Println("Visibility readings for station:", station)
+func (api *VisibilityAPI) PrintTabDelimited(req *ClientRequest, visibilityData []Visibility) {
+	fmt.Printf("Visibility readings for station %s:\n\n", req.Station)
+	units := "nmi"
+	if req.Units == UnitsMetric {
+		units = "km"
+	}
 	for _, el := range visibilityData {
-		fmt.Printf("\t%s\t%s (%s)\n", el.Time, el.Value, el.Flags)
+		fmt.Printf("%s: %s%s (Flags: %s)\n", el.Time, el.Value, units, el.Flags)
 	}
 }

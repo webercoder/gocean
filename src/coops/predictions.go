@@ -59,9 +59,13 @@ func (api *PredictionsAPI) GetPredictions(req *ClientRequest) ([]Prediction, err
 }
 
 // PrintTabDelimited outputs the tides in text format.
-func (api *PredictionsAPI) PrintTabDelimited(station string, predictions []Prediction) {
-	fmt.Println("Tide predictions for station:", station)
-	for _, prediction := range predictions {
-		fmt.Printf("  %s\t%s\n", prediction.Time, prediction.Value)
+func (api *PredictionsAPI) PrintTabDelimited(req *ClientRequest, predictions []Prediction) {
+	fmt.Printf("Tide predictions for station %s:\n\n", req.Station)
+	units := "ft"
+	if req.Units == UnitsMetric {
+		units = "m"
+	}
+	for _, el := range predictions {
+		fmt.Printf("%s: %s%s\n", el.Time, el.Value, units)
 	}
 }

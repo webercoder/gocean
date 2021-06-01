@@ -56,7 +56,7 @@ func (atch *VisibilityCommandHandler) handlePrettyPrint(req *coops.ClientRequest
 		results = results[:atch.clientConfig.Count]
 	}
 
-	atch.VisibilityAPI.PrintTabDelimited(atch.clientConfig.Station, results)
+	atch.VisibilityAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

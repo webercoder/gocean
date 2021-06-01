@@ -56,7 +56,7 @@ func (atch *ConductivityCommandHandler) handlePrettyPrint(req *coops.ClientReque
 		results = results[:atch.clientConfig.Count]
 	}
 
-	atch.ConductivityAPI.PrintTabDelimited(atch.clientConfig.Station, results)
+	atch.ConductivityAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

@@ -65,14 +65,17 @@ func (api *WaterLevelAPI) GetWaterLevels(req *ClientRequest) ([]WaterLevel, erro
 }
 
 // PrintTabDelimited outputs the tides in text format.
-func (api *WaterLevelAPI) PrintTabDelimited(station string, levels []WaterLevel) {
-	fmt.Println("Tide water levels for station:", station)
+func (api *WaterLevelAPI) PrintTabDelimited(req *ClientRequest, levels []WaterLevel) {
+	fmt.Printf("Tide water levels for station %s:\n\n", req.Station)
+	units := "ft"
+	if req.Units == UnitsMetric {
+		units = "m"
+	}
 	for _, level := range levels {
 		quality := "Preliminary"
 		if level.Quality == "v" {
 			quality = "Verified"
 		}
-
-		fmt.Printf("  %s\t%s\t%s\n", level.Time, level.Value, quality)
+		fmt.Printf("%s: %s%s (Quality: %s, Flags: %s)\n", level.Time, level.Value, units, quality, level.Flags)
 	}
 }

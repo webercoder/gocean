@@ -56,7 +56,7 @@ func (pch *PredictionsCommandHandler) handlePrettyPrint(req *coops.ClientRequest
 		results = results[:pch.clientConfig.Count]
 	}
 
-	pch.predAPI.PrintTabDelimited(pch.clientConfig.Station, results)
+	pch.predAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

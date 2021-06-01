@@ -69,11 +69,14 @@ func (api *WindAPI) GetWind(req *ClientRequest) ([]Wind, error) {
 }
 
 // PrintTabDelimited outputs the data in text format.
-func (api *WindAPI) PrintTabDelimited(station string, winds []Wind) {
-	fmt.Println("Wind readings for station:", station)
+func (api *WindAPI) PrintTabDelimited(req *ClientRequest, winds []Wind) {
+	fmt.Printf("Wind readings for station %s:\n\n", req.Station)
+	units := "kn"
+	if req.Units == UnitsMetric {
+		units = "m/s"
+	}
 	for _, w := range winds {
-		fmt.Printf("%s\n", w.Time)
-		fmt.Printf("\tSpeed/Gusts: %s/%s\n", w.Speed, w.Gusts)
-		fmt.Printf("\tDirection: %s (%s)\n", w.DirectionDegrees, w.DirectionAcronym)
+		fmt.Printf("%s: %s%s from the %s (%s) with gusts of %s%s\n",
+			w.Time, w.Speed, units, w.DirectionAcronym, w.DirectionDegrees, w.Gusts, units)
 	}
 }

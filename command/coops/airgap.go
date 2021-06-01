@@ -56,7 +56,7 @@ func (atch *AirGapCommandHandler) handlePrettyPrint(req *coops.ClientRequest) er
 		results = results[:atch.clientConfig.Count]
 	}
 
-	atch.AirGapAPI.PrintTabDelimited(atch.clientConfig.Station, results)
+	atch.AirGapAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

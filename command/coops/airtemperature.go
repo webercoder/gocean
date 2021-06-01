@@ -56,7 +56,7 @@ func (atch *AirTemperatureCommandHandler) handlePrettyPrint(req *coops.ClientReq
 		results = results[:atch.clientConfig.Count]
 	}
 
-	atch.AirTemperatureAPI.PrintTabDelimited(atch.clientConfig.Station, results)
+	atch.AirTemperatureAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

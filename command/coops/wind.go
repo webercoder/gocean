@@ -56,7 +56,7 @@ func (atch *WindCommandHandler) handlePrettyPrint(req *coops.ClientRequest) erro
 		results = results[:atch.clientConfig.Count]
 	}
 
-	atch.WindAPI.PrintTabDelimited(atch.clientConfig.Station, results)
+	atch.WindAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

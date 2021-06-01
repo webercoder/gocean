@@ -56,7 +56,7 @@ func (wlch *WaterLevelsCommandHandler) handlePrettyPrint(req *coops.ClientReques
 		results = results[:wlch.clientConfig.Count]
 	}
 
-	wlch.waterLevelAPI.PrintTabDelimited(wlch.clientConfig.Station, results)
+	wlch.waterLevelAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

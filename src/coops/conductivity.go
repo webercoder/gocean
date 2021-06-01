@@ -64,9 +64,9 @@ func (api *ConductivityAPI) GetConductivity(req *ClientRequest) ([]Conductivity,
 }
 
 // PrintTabDelimited outputs the data in text format.
-func (api *ConductivityAPI) PrintTabDelimited(station string, conductivityData []Conductivity) {
-	fmt.Println("Conductivity readings for station:", station)
+func (api *ConductivityAPI) PrintTabDelimited(req *ClientRequest, conductivityData []Conductivity) {
+	fmt.Printf("Conductivity readings for station %s:\n\n", req.Station)
 	for _, el := range conductivityData {
-		fmt.Printf("\t%s\t%s (%s)\n", el.Time, el.Value, el.Flags)
+		fmt.Printf("%s: %smS/cm (Flags: %s)\n", el.Time, el.Value, el.Flags)
 	}
 }

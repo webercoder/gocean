@@ -56,7 +56,7 @@ func (atch *WaterTemperatureCommandHandler) handlePrettyPrint(req *coops.ClientR
 		results = results[:atch.clientConfig.Count]
 	}
 
-	atch.WaterTemperatureAPI.PrintTabDelimited(atch.clientConfig.Station, results)
+	atch.WaterTemperatureAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

@@ -64,9 +64,13 @@ func (api *AirTemperatureAPI) GetAirTemperatures(req *ClientRequest) ([]AirTempe
 }
 
 // PrintTabDelimited outputs the data in text format.
-func (api *AirTemperatureAPI) PrintTabDelimited(station string, temps []AirTemperature) {
-	fmt.Println("Air temperatures for station:", station)
-	for _, t := range temps {
-		fmt.Printf("  %s\t%s\n", t.Time, t.Value)
+func (api *AirTemperatureAPI) PrintTabDelimited(req *ClientRequest, temps []AirTemperature) {
+	fmt.Printf("Air temperature readings for station %s:\n\n", req.Station)
+	units := "f"
+	if req.Units == UnitsMetric {
+		units = "c"
+	}
+	for _, el := range temps {
+		fmt.Printf("%s: %s°%s\n", el.Time, el.Value, units)
 	}
 }

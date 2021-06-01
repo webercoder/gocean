@@ -64,9 +64,9 @@ func (api *AirPressureAPI) GetAirPressure(req *ClientRequest) ([]AirPressure, er
 }
 
 // PrintTabDelimited outputs the data in text format.
-func (api *AirPressureAPI) PrintTabDelimited(station string, airpressures []AirPressure) {
-	fmt.Println("Air pressure readings for station:", station)
-	for _, ap := range airpressures {
-		fmt.Printf("\t%s\t%s\n", ap.Time, ap.Value)
+func (api *AirPressureAPI) PrintTabDelimited(req *ClientRequest, airpressures []AirPressure) {
+	fmt.Printf("Air pressure readings for station %s:\n\n", req.Station)
+	for _, el := range airpressures {
+		fmt.Printf("%s: %smbar (Flags: %s)\n", el.Time, el.Value, el.Flags)
 	}
 }

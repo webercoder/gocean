@@ -56,7 +56,7 @@ func (atch *AirPressureCommandHandler) handlePrettyPrint(req *coops.ClientReques
 		results = results[:atch.clientConfig.Count]
 	}
 
-	atch.AirPressureAPI.PrintTabDelimited(atch.clientConfig.Station, results)
+	atch.AirPressureAPI.PrintTabDelimited(req, results)
 	return nil
 }
 

@@ -64,9 +64,13 @@ func (api *WaterTemperatureAPI) GetWaterTemperatures(req *ClientRequest) ([]Wate
 }
 
 // PrintTabDelimited outputs the data in text format.
-func (api *WaterTemperatureAPI) PrintTabDelimited(station string, temps []WaterTemperature) {
-	fmt.Println("Water temperatures for station:", station)
-	for _, t := range temps {
-		fmt.Printf("  %s\t%s\n", t.Time, t.Value)
+func (api *WaterTemperatureAPI) PrintTabDelimited(req *ClientRequest, temps []WaterTemperature) {
+	fmt.Printf("Water temperature readings for station %s:\n\n", req.Station)
+	units := "f"
+	if req.Units == UnitsMetric {
+		units = "c"
+	}
+	for _, el := range temps {
+		fmt.Printf("%s: %s°%s\n", el.Time, el.Value, units)
 	}
 }
